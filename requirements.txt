@@ -46,3 +46,4 @@ PyJWT==2.12.1
 gunicorn
 psycopg2-binary
 dj-database-url
+whitenoise
