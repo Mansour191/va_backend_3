@@ -82,7 +82,7 @@ class SmartAlert(models.Model):
     objects = SmartAlertManager()
 
     class Meta:
-        db_table = 'api_alert'
+        db_table = 'api_smart_alert'
         indexes = [
             models.Index(fields=['user', 'is_active']),
             models.Index(fields=['type', 'is_active']),

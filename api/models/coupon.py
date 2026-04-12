@@ -44,29 +44,29 @@ class Coupon(models.Model):
     """Enhanced Coupon Model with Advanced Features"""
     
     DISCOUNT_TYPE_CHOICES = [
-        ('percentage', _('نسبة مئوية')),
-        ('fixed', _('مبلغ ثابت')),
+        ('percentage', _('percentage')),
+        ('fixed', _('fixed')),
     ]
     
     # Basic Information
     code = models.CharField(
         max_length=50, 
         unique=True, 
-        verbose_name=_('رمز الكوبون'),
-        help_text=_('رمز فريد للكوبون')
+        verbose_name=_('Coupon Code'),
+        help_text=_('Unique coupon code')
     )
     name = models.CharField(
         max_length=200,
         blank=True,
         null=True,
-        verbose_name=_('اسم الكوبون'),
-        help_text=_('اسم وصفي للكوبون')
+        verbose_name=_('Coupon Name'),
+        help_text=_('Descriptive name for the coupon')
     )
     description = models.TextField(
         blank=True,
         null=True,
-        verbose_name=_('وصف الكوبون'),
-        help_text=_('وصف مفصل للكوبون وشروطه')
+        verbose_name=_('Coupon Description'),
+        help_text=_('Detailed description and terms')
     )
     
     # Discount Configuration
@@ -74,40 +74,41 @@ class Coupon(models.Model):
         max_length=20,
         choices=DISCOUNT_TYPE_CHOICES,
         default='percentage',
-        verbose_name=_('نوع الخصم'),
-        help_text=_('نوع الخصم: نسبة مئوية أو مبلغ ثابت')
+        verbose_name=_('Discount Type'),
+        help_text=_('Discount type: percentage or fixed')
     )
     discount_value = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        verbose_name=_('قيمة الخصم'),
-        help_text=_('قيمة الخصم (نسبة أو مبلغ)')
+        verbose_name=_('Discount Value'),
+        help_text=_('Discount value (percentage or amount)')
     )
     max_discount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         blank=True,
         null=True,
-        verbose_name=_('أقصى خصم'),
-        help_text=_('أقصى قيمة للخصم (للنسب المئوية فقط)')
+        verbose_name=_('Maximum Discount'),
+        help_text=_('Maximum discount amount (for percentage only)')
     )
     
     # Usage Limits
     usage_limit = models.IntegerField(
         blank=True,
         null=True,
-        verbose_name=_('حد الاستخدام'),
-        help_text=_('الحد الأقصى لعدد مرات الاستخدام')
+        verbose_name=_('Usage Limit'),
+        help_text=_('Maximum number of times coupon can be used')
     )
     usage_limit_per_user = models.IntegerField(
-        default=1,
-        verbose_name=_('حد الاستخدام لكل مستخدم'),
-        help_text=_('عدد المرات التي يمكن للمستخدم استخدام الكوبون')
+        blank=True,
+        null=True,
+        verbose_name=_('Usage Limit Per User'),
+        help_text=_('Number of times user can use coupon')
     )
     used_count = models.IntegerField(
         default=0,
-        verbose_name=_('مرات الاستخدام'),
-        help_text=_('عدد المرات التي تم استخدام الكوبون')
+        verbose_name=_('Usage Count'),
+        help_text=_('Number of times coupon has been used')
     )
     
     # Order Requirements
@@ -115,51 +116,51 @@ class Coupon(models.Model):
         max_digits=10,
         decimal_places=2,
         default=0,
-        verbose_name=_('الحد الأدنى للطلب'),
-        help_text=_('الحد الأدنى لقيمة الطلب لتفعيل الكوبون')
+        verbose_name=_('Minimum Order Value'),
+        help_text=_('Minimum order value to activate coupon')
     )
     max_order_value = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         blank=True,
         null=True,
-        verbose_name=_('الحد الأقصى للطلب'),
-        help_text=_('الحد الأقصى لقيمة الطلب لتطبيق الكوبون')
+        verbose_name=_('Maximum Order Value'),
+        help_text=_('Maximum order value to apply coupon')
     )
     
     # Date Constraints
     valid_from = models.DateTimeField(
         blank=True,
         null=True,
-        verbose_name=_('تاريخ البداية'),
-        help_text=_('تاريخ بداية صلاحية الكوبون')
+        verbose_name=_('Start Date'),
+        help_text=_('Coupon validity start date')
     )
     valid_to = models.DateTimeField(
         blank=True,
         null=True,
-        verbose_name=_('تاريخ النهاية'),
-        help_text=_('تاريخ انتهاء صلاحية الكوبون')
+        verbose_name=_('End Date'),
+        help_text=_('Coupon validity end date')
     )
     
     # Status Control
     is_active = models.BooleanField(
         default=True,
-        verbose_name=_('نشط'),
-        help_text=_('هل الكوبون نشط ومتاح للاستخدام')
+        verbose_name=_('Active'),
+        help_text=_('Whether the coupon is active and usable')
     )
     
     # Targeting (Optional)
     applicable_products = models.ManyToManyField(
         'Product',
         blank=True,
-        verbose_name=_('المنتجات المطبقة'),
-        help_text=_('المنتجات التي يمكن تطبيق الكوبون عليها')
+        verbose_name=_('Applicable Products'),
+        help_text=_('Products this coupon can be applied to')
     )
     applicable_categories = models.ManyToManyField(
         'Category',
         blank=True,
-        verbose_name=_('الفئات المطبقة'),
-        help_text=_('الفئات التي يمكن تطبيق الكوبون عليها')
+        verbose_name=_('Applicable Categories'),
+        help_text=_('Categories this coupon can be applied to')
     )
     
     # Audit Fields
@@ -327,13 +328,13 @@ class CouponUsage(models.Model):
     coupon = models.ForeignKey(
         Coupon,
         on_delete=models.CASCADE,
-        related_name='couponusage',
+        related_name='coupon_usages',
         verbose_name=_('الكوبون')
     )
     user = models.ForeignKey(
         'api.User',
         on_delete=models.CASCADE,
-        related_name='couponusage',
+        related_name='coupon_usages',
         verbose_name=_('المستخدم')
     )
     order = models.ForeignKey(
@@ -341,7 +342,7 @@ class CouponUsage(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='couponusage',
+        related_name='coupon_usages',
         verbose_name=_('الطلب')
     )
     discount_amount = models.DecimalField(
@@ -368,45 +369,3 @@ class CouponUsage(models.Model):
         return f"{self.user.username} - {self.coupon.code}"
 
 
-# Post-migrate signal to create default coupons
-from django.db.models.signals import post_migrate
-from django.dispatch import receiver
-
-@receiver(post_migrate)
-def create_default_coupons(sender, **kwargs):
-    """Create default coupons after migration"""
-    if sender.name == 'api':
-        from django.utils import timezone
-        from datetime import timedelta
-        
-        if not Coupon.objects.filter(code='WELCOME10').exists():
-            welcome_coupon = Coupon.objects.create(
-                code='WELCOME10',
-                name=_('كوبون الترحيب'),
-                description=_('خصم 10% على أول طلب'),
-                discount_type='percentage',
-                discount_value=10,
-                min_order_value=1000,
-                usage_limit=100,
-                usage_limit_per_user=1,
-                valid_from=timezone.now(),
-                valid_to=timezone.now() + timedelta(days=30),
-                is_active=True
-            )
-            print(f"✅ Created welcome coupon: {welcome_coupon.code}")
-        
-        if not Coupon.objects.filter(code='SUMMER2024').exists():
-            summer_coupon = Coupon.objects.create(
-                code='SUMMER2024',
-                name=_('كوبون الصيف'),
-                description=_('خصم 500 دينار جزائري على الطلبات فوق 5000'),
-                discount_type='fixed',
-                discount_value=500,
-                min_order_value=5000,
-                usage_limit=50,
-                usage_limit_per_user=1,
-                valid_from=timezone.now(),
-                valid_to=timezone.now() + timedelta(days=90),
-                is_active=True
-            )
-            print(f"✅ Created summer coupon: {summer_coupon.code}")

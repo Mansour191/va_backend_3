@@ -13,7 +13,9 @@ class ShippingMethod(models.Model):
         'api.Organization',
         on_delete=models.CASCADE,
         related_name='shipping_methods',
-        db_column='organization_id'
+        db_column='organization_id',
+        null=True,
+        blank=True
     )
     name = models.CharField(max_length=100)
     provider_name = models.CharField(max_length=100, blank=True, null=True)

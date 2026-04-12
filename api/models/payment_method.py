@@ -7,6 +7,8 @@ from django.db import models
 from django.utils import timezone
 import json
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 
 class PaymentMethodManager(models.Manager):
@@ -170,7 +172,7 @@ class PaymentMethod(models.Model):
     
     # Audit Fields
     created_by = models.ForeignKey(
-        User,
+        'api.User',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

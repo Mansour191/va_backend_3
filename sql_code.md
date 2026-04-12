@@ -1,3 +1,4 @@
+
 -- ============================================
 -- VinylArt Production Database Schema
 -- MySQL 8.0+ Optimized
@@ -841,3 +842,4 @@ CREATE INDEX api_customersegment_priority_idx ON api_customersegment(priority);
 -- FROM information_schema.tables 
 -- WHERE table_schema = 'vinylart' 
 -- ORDER BY table_name;
+

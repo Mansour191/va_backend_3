@@ -33,7 +33,7 @@ class Order(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name='orders',
+        related_name='shipping_orders',
         db_column='wilaya_id'
     )
     shipping_method = models.ForeignKey(
@@ -41,7 +41,7 @@ class Order(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name='orders',
+        related_name='shipping_method_orders',
         db_column='shipping_method_id'
     )
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
@@ -84,27 +84,6 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.order_number}"
-
-    def save(self, *args, **kwargs):
-        """
-        Override save method to generate automatic order_number
-        """
-        if not self.order_number:
-            # Generate order number with format: VA-YYYYMMDD-XXXXX
-            today = datetime.now().strftime('%Y%m%d')
-            # Get today's order count
-            today_count = Order.objects.filter(
-                created_at__date=datetime.now().date()
-            ).count()
-            # Generate unique order number
-            self.order_number = f"VA-{today}-{today_count + 1:05d}"
-            
-            # Ensure uniqueness by checking if order number already exists
-            while Order.objects.filter(order_number=self.order_number).exists():
-                today_count += 1
-                self.order_number = f"VA-{today}-{today_count + 1:05d}"
-        
-        super().save(*args, **kwargs)
 
     def calculate_total_amount(self):
         """

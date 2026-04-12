@@ -266,6 +266,25 @@ class ProductType(DjangoObjectType):
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
 
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        """Optimize queryset with select_related and prefetch_related"""
+        return queryset.select_related(
+            'category'
+        ).prefetch_related(
+            'images',
+            'variants',
+            'product_materials__material'
+        ).only(
+            'id', 'name_ar', 'name_en', 'slug', 'description_ar', 'description_en',
+            'base_price', 'cost', 'compare_at_price', 'on_sale', 'discount_percent',
+            'is_featured', 'is_new', 'is_active', 'is_digital', 'stock', 'reorder_level',
+            'reorder_quantity', 'weight', 'dimensions', 'sku', 'barcode',
+            'seo_title', 'seo_description', 'seo_keywords', 'view_count',
+            'order_count', 'rating_average', 'rating_count', 'created_at', 'updated_at',
+            'category_id'
+        )
+
     def resolve_current_price(self, info):
         """Calculate current price with discount"""
         if self.on_sale and self.discount_percent > 0:
@@ -283,8 +302,10 @@ class ProductType(DjangoObjectType):
 
     def resolve_main_image(self, info):
         """Get main product image"""
-        main_image = self.images.filter(is_main=True).first()
-        return main_image.image_url if main_image else None
+        for image in self.images.all():
+            if image.is_main:
+                return image.image_url
+        return None
 
     def resolve_is_available(self, info):
         """Check if product is available"""
@@ -305,10 +326,11 @@ class ProductType(DjangoObjectType):
     def resolve_total_material_cost(self, info):
         """Calculate total material cost for this product"""
         total_cost = 0
-        for pm in self.product_materials.filter(is_active=True):
-            # Convert units to base unit for calculation
-            base_quantity = self.convert_to_base_unit(pm.quantity_used, pm.unit)
-            total_cost += pm.material.price_per_m2 * base_quantity
+        for pm in self.product_materials.all():
+            if pm.is_active:
+                # Convert units to base unit for calculation
+                base_quantity = self.convert_to_base_unit(pm.quantity_used, pm.unit)
+                total_cost += pm.material.price_per_m2 * base_quantity
         return float(total_cost)
 
     def convert_to_base_unit(self, quantity, unit):
@@ -416,6 +438,17 @@ class ProductMaterialType(DjangoObjectType):
             'material': ['exact'],
             'is_active': ['exact'],
         }
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        """Optimize queryset with select_related"""
+        return queryset.select_related(
+            'product',
+            'material'
+        ).only(
+            'id', 'product_id', 'material_id', 'quantity_used', 'unit',
+            'cost_per_unit', 'is_active', 'created_at', 'updated_at'
+        )
 
     def resolve_material_cost(self, info):
         """Calculate cost for this material assignment"""

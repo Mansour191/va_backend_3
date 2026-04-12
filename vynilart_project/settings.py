@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import dj_database_url
 import os
 from dotenv import load_dotenv
 from pathlib import Path
@@ -17,6 +18,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -27,7 +29,12 @@ SECRET_KEY = 'django-insecure-x1^6b(sczhxt_9!vb8(ov0x(!w+vq-!qgrg+^(7lbp)iap9(j1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'vynilart-api.onrender.com',  # رابط الباكيند الخاص بك
+    '.onrender.com',             # للسماح بأي نطاق فرعي من Render
+]
 
 
 # Application definition
@@ -85,24 +92,34 @@ GRAPHENE = {
     'MIDDLEWARE': [],  # Add empty middleware list to prevent DjangoDebugMiddleware error
 }
 
-# CORS settings for Vue 3
+# CORS settings for Vue 3 and production deployment
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    # Vercel deployment URLs
+    "https://*.vercel.app",
+    "https://vynilart.vercel.app",
+    # Add your custom Vercel domain here if needed
+    # Example: "https://your-custom-domain.vercel.app"
 ]
 
-# CSRF trusted origins for browser preview
+# CSRF trusted origins for browser preview and production
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:54427",
     "http://localhost:54427",
+    # Vercel frontend URLs
+    "https://vynilart.vercel.app",
+    "https://*.vercel.app",
+    # Render backend URL
+    "https://vynilart-api.onrender.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 # Allow all methods for development
-CORS_ALLOW_ALL_ORIGINS = True  # Only for development
+# CORS_ALLOW_ALL_ORIGINS = True  # Only for development - disabled for production
 
 # Allow specific headers
 CORS_ALLOW_HEADERS = [
@@ -127,8 +144,6 @@ CORS_ALLOW_HEADERS = [
 #     },
 # }
 
-load_dotenv()
-
 # Custom User Model
 AUTH_USER_MODEL = 'api.User'
 
@@ -136,12 +151,18 @@ AUTH_USER_MODEL = 'api.User'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+    )
 }
 
+CA_FILE_PATH = os.path.join(BASE_DIR, 'ca.pem')
+
+DATABASES['default']['OPTIONS'] = {
+    'sslmode': 'verify-ca',
+    'sslrootcert': CA_FILE_PATH,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

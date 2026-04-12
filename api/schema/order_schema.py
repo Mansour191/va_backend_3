@@ -89,6 +89,27 @@ class OrderType(DjangoObjectType):
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
 
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        """Optimize queryset with select_related and prefetch_related"""
+        return queryset.select_related(
+            'user',
+            'wilaya',
+            'shipping_method',
+            'coupon'
+        ).prefetch_related(
+            'items__product',
+            'items__material',
+            'timeline__user'
+        ).only(
+            'id', 'order_number', 'user_id', 'customer_name', 'phone', 'email',
+            'shipping_address', 'wilaya_id', 'shipping_method_id', 'subtotal',
+            'shipping_cost', 'tax', 'discount_amount', 'total_amount',
+            'status', 'payment_method', 'payment_status', 'sync_status',
+            'erpnext_sales_order_id', 'sync_error', 'last_synced_at', 'notes',
+            'coupon_id', 'created_at', 'updated_at'
+        )
+
     def resolve_is_paid(self, info):
         """Check if order is paid"""
         return self.payment_status
@@ -160,6 +181,19 @@ class OrderItemType(DjangoObjectType):
             'product': ['exact'],
             'material': ['exact'],
         }
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        """Optimize queryset with select_related"""
+        return queryset.select_related(
+            'order',
+            'product',
+            'material'
+        ).only(
+            'id', 'order_id', 'product_id', 'material_id', 'width', 'height',
+            'dimension_unit', 'marble_texture', 'custom_design', 'quantity',
+            'price', 'created_at', 'updated_at'
+        )
 
     def resolve_product_name(self, info):
         """Get product name"""

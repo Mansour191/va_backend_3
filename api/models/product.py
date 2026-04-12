@@ -69,23 +69,22 @@ class Material(models.Model):
     unit = models.CharField(
         max_length=20,
         choices=[
-            ('kg', 'كيلوجرام'),
-            ('m', 'متر'),
-            ('piece', 'قطعة'),
-            ('liter', 'لتر'),
-            ('meter2', 'متر مربع'),
+            ('kg', 'kilogram'),
+            ('m', 'meter'),
+            ('piece', 'piece'),
+            ('liter', 'liter'),
+            ('meter2', 'square meter'),
         ],
         default='kg'
     )
     
-    # Supplier relationship
+    # Self-referencing supplier field
     supplier = models.ForeignKey(
-        'self', 
-        on_delete=models.SET_NULL, 
-        blank=True, 
+        'self',
+        on_delete=models.SET_NULL,
+        blank=True,
         null=True,
-        related_name='supplied_materials',
-        db_column='supplier_id'
+        related_name='supplied_materials'
     )
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -167,7 +166,6 @@ class Product(models.Model):
     # Physical attributes
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     dimensions = models.CharField(max_length=100, blank=True, null=True)
-    sku = models.CharField(max_length=100, unique=True, db_index=True)
     
     # SEO
     seo_title = models.CharField(max_length=255, blank=True, null=True)
@@ -361,14 +359,15 @@ class ProductMaterial(models.Model):
     unit = models.CharField(
         max_length=20,
         choices=[
-            ('kg', 'كيلوجرام'),
-            ('m', 'متر'),
-            ('piece', 'قطعة'),
-            ('liter', 'لتر'),
-            ('meter2', 'متر مربع'),
+            ('kg', 'kilogram'),
+            ('m', 'meter'),
+            ('piece', 'piece'),
+            ('liter', 'liter'),
+            ('meter2', 'square meter'),
         ],
         default='kg'
     )
+    cost_per_unit = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -378,9 +377,9 @@ class ProductMaterial(models.Model):
         indexes = [
             models.Index(fields=['product']),
             models.Index(fields=['material']),
-            models.Index(fields=['is_active']),
         ]
         unique_together = ['product', 'material']
+        ordering = ['product', 'material']
 
     def __str__(self):
-        return f"{self.product.name_ar} - {self.material.name_ar} ({self.quantity_used} {self.unit})"
+        return f"{self.product.name_ar} - {self.material.name_ar}"
