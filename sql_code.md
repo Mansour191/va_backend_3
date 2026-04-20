@@ -586,22 +586,39 @@ CREATE TABLE IF NOT EXISTS api_pricingengine (
     id INT AUTO_INCREMENT PRIMARY KEY,
     raw_material_cost DECIMAL(10,2) DEFAULT 500,
     labor_cost DECIMAL(10,2) DEFAULT 300,
-    international_shipping DECIMAL(10,2) DEFAULT 200
+    international_shipping DECIMAL(10,2) DEFAULT 200,
+    currency VARCHAR(3) DEFAULT 'DZD',
+    tax_percentage DECIMAL(5,2) DEFAULT 0,
+    valid_from DATETIME(6),
+    valid_to DATETIME(6),
+    is_active TINYINT(1) DEFAULT 1,
+    INDEX api_pricingengine_currency_idx (currency),
+    INDEX api_pricingengine_is_active_idx (is_active),
+    INDEX api_pricingengine_valid_from_idx (valid_from),
+    INDEX api_pricingengine_valid_to_idx (valid_to)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 11. BLOG
 -- ============================================
 
--- Blog Categories
+-- Blog Categories (Enhanced with new fields)
 CREATE TABLE IF NOT EXISTS api_blogcategory (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name_ar VARCHAR(255) NOT NULL,
     name_en VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
+    description_ar TEXT,
+    icon_class VARCHAR(100),
+    order_priority INT DEFAULT 0,
+    is_featured TINYINT(1) DEFAULT 0,
+    meta_title VARCHAR(255),
     created_at DATETIME(6) NOT NULL,
-    updated_at DATETIME(6) NOT NULL
+    updated_at DATETIME(6) NOT NULL,
+    INDEX api_blogcategory_slug_like (slug),
+    INDEX api_blogcategory_order_priority_idx (order_priority),
+    INDEX api_blogcategory_is_featured_idx (is_featured)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Blog Posts
@@ -612,15 +629,20 @@ CREATE TABLE IF NOT EXISTS api_blogpost (
     slug VARCHAR(255) NOT NULL UNIQUE,
     content_ar LONGTEXT,
     content_en LONGTEXT,
+    excerpt TEXT,
     summary_ar TEXT,
     summary_en TEXT,
     category_id INT,
     author_id INT,
     featured_image VARCHAR(500),
+    featured_image_url VARCHAR(500),
     tags JSON,
     views INT DEFAULT 0,
+    view_count INT DEFAULT 0,
     is_published TINYINT(1) DEFAULT 0,
+    scheduled_at DATETIME(6),
     published_at DATETIME(6),
+    read_time_minutes INT DEFAULT 0,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
     FOREIGN KEY (category_id) REFERENCES api_blogcategory(id) ON DELETE SET NULL,
@@ -639,36 +661,86 @@ CREATE TABLE IF NOT EXISTS api_conversationhistory (
     message TEXT NOT NULL,
     source VARCHAR(50) DEFAULT 'user',
     confidence DECIMAL(5,2),
+    message_type VARCHAR(10) DEFAULT 'text',
+    sentiment_score DECIMAL(5,2),
+    is_read TINYINT(1) DEFAULT 0,
+    related_project VARCHAR(100),
     metadata JSON,
     created_at DATETIME(6) NOT NULL,
-    INDEX api_conversationhistory_session_id_8d0f3e0c (session_id)
+    INDEX api_conversationhistory_session_id_8d0f3e0c (session_id),
+    INDEX api_conversationhistory_role_idx (role),
+    INDEX api_conversationhistory_source_idx (source),
+    INDEX api_conversationhistory_message_type_idx (message_type),
+    INDEX api_conversationhistory_is_read_idx (is_read),
+    INDEX api_conversationhistory_related_project_idx (related_project),
+    INDEX api_conversationhistory_created_at_idx (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
 -- 13. DASHBOARD & SETTINGS
 -- ============================================
 
--- Dashboard Settings
+-- Dashboard Settings (Enhanced with UI Customization)
 CREATE TABLE IF NOT EXISTS api_dashboardsettings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     widgets JSON,
     layout JSON,
     preferences JSON,
+    
+    -- New UI customization fields
+    layout_json JSON COMMENT 'Advanced layout configuration for dashboard widgets',
+    refresh_interval INT DEFAULT 30 COMMENT 'Auto-refresh interval in seconds',
+    show_notifications TINYINT(1) DEFAULT 1 COMMENT 'Enable/disable dashboard notifications',
+    primary_color VARCHAR(7) DEFAULT '#3B82F6' COMMENT 'Primary theme color in hex format',
+    default_chart_type VARCHAR(20) DEFAULT 'line' COMMENT 'Default chart type for analytics',
+    
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES auth_user(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES auth_user(id) ON DELETE CASCADE,
+    INDEX api_dashboardsettings_user_idx (user_id),
+    INDEX api_dashboardsettings_refresh_interval_idx (refresh_interval),
+    INDEX api_dashboardsettings_show_notifications_idx (show_notifications)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Wishlist Settings
+-- Wishlist Settings (Enhanced with Marketing & Sharing Features)
 CREATE TABLE IF NOT EXISTS api_wishlistsettings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
+    
+    -- Display preferences
+    items_per_page INT DEFAULT 20,
+    sort_by VARCHAR(20) DEFAULT 'created_at',
+    sort_order VARCHAR(4) DEFAULT 'desc',
+    
+    -- Notification preferences
+    email_notifications TINYINT(1) DEFAULT 1,
+    push_notifications TINYINT(1) DEFAULT 1,
+    notify_on_price_drop TINYINT(1) DEFAULT 1,
+    alert_on_low_stock TINYINT(1) DEFAULT 1,
+    
+    -- Auto-cleanup preferences
+    auto_remove_out_of_stock TINYINT(1) DEFAULT 0,
+    auto_remove_discontinued TINYINT(1) DEFAULT 1,
+    
+    -- Privacy and sharing settings
+    make_public TINYINT(1) DEFAULT 0,
+    privacy_level VARCHAR(10) DEFAULT 'private',
+    share_token VARCHAR(64) UNIQUE,
+    max_items_allowed INT DEFAULT 100,
+    
+    -- Legacy fields (for backward compatibility)
     auto_add TINYINT(1) DEFAULT 1,
-    max_items INT DEFAULT 100,
     email_reminders TINYINT(1) DEFAULT 1,
+    
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
+    
+    -- Indexes for performance
+    INDEX api_wishlistsettings_user_idx (user_id),
+    INDEX api_wishlistsettings_share_token_idx (share_token),
+    INDEX api_wishlistsettings_privacy_level_idx (privacy_level),
+    
     FOREIGN KEY (user_id) REFERENCES auth_user(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -698,6 +770,18 @@ CREATE INDEX idx_review_user ON api_review(user_id);
 CREATE INDEX idx_notification_user ON api_notification(user_id);
 CREATE INDEX idx_notification_is_read ON api_notification(is_read);
 
+-- Blog post indexes for professional blogging features
+CREATE INDEX idx_blogpost_slug ON api_blogpost(slug);
+CREATE INDEX idx_blogpost_category ON api_blogpost(category_id);
+CREATE INDEX idx_blogpost_author ON api_blogpost(author_id);
+CREATE INDEX idx_blogpost_is_published ON api_blogpost(is_published);
+CREATE INDEX idx_blogpost_published_at ON api_blogpost(published_at);
+CREATE INDEX idx_blogpost_scheduled_at ON api_blogpost(scheduled_at);
+CREATE INDEX idx_blogpost_created_at ON api_blogpost(created_at);
+CREATE INDEX idx_blogpost_views ON api_blogpost(views);
+CREATE INDEX idx_blogpost_view_count ON api_blogpost(view_count);
+CREATE INDEX idx_blogpost_read_time ON api_blogpost(read_time_minutes);
+
 -- ============================================
 -- 15. TRIGGERS FOR AUTO-UPDATES
 -- ============================================
@@ -725,6 +809,35 @@ BEGIN
     SET NEW.updated_at = NOW();
 END//
 
+-- UserProfile Before Update (Audit Trail)
+CREATE TABLE IF NOT EXISTS api_userprofile_before_update (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_profile_id INT NOT NULL,
+    phone VARCHAR(20) NULL,
+    address TEXT NULL,
+    bio TEXT NULL,
+    avatar VARCHAR(255) NULL,
+    preferences JSON NULL,
+    settings JSON NULL,
+    update_reason TEXT NULL COMMENT 'Reason for the profile update',
+    updated_by_id INT NULL COMMENT 'User who made the update',
+    device_info VARCHAR(500) NULL COMMENT 'Device/browser information',
+    change_type VARCHAR(50) NULL COMMENT 'Type of change: profile_update, settings_change, etc.',
+    snapshot_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'When this snapshot was created',
+    original_created_at DATETIME(6) NOT NULL COMMENT 'Original created_at from profile',
+    original_updated_at DATETIME(6) NOT NULL COMMENT 'Original updated_at from profile',
+    
+    -- Foreign Keys
+    FOREIGN KEY (user_profile_id) REFERENCES api_userprofile(id) ON DELETE CASCADE,
+    FOREIGN KEY (updated_by_id) REFERENCES auth_user(id) ON DELETE SET NULL,
+    
+    -- Indexes for performance
+    INDEX idx_api_userprofile_before_update_user_profile (user_profile_id),
+    INDEX idx_api_userprofile_before_update_snapshot_date (snapshot_date),
+    INDEX idx_api_userprofile_before_update_updated_by (updated_by_id),
+    INDEX idx_api_userprofile_before_update_change_type (change_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Audit trail for user profile changes';
+
 CREATE TRIGGER api_userprofile_before_update 
 BEFORE UPDATE ON api_userprofile
 FOR EACH ROW
@@ -738,12 +851,17 @@ DELIMITER ;
 -- ============================================
 
 -- Insert default pricing engine
-INSERT INTO api_pricingengine (id, raw_material_cost, labor_cost, international_shipping) 
-VALUES (1, 500, 300, 200)
+INSERT INTO api_pricingengine (id, raw_material_cost, labor_cost, international_shipping, currency, tax_percentage, valid_from, valid_to, is_active) 
+VALUES (1, 500, 300, 200, 'DZD', 0, NULL, NULL, 1)
 ON DUPLICATE KEY UPDATE 
     raw_material_cost = VALUES(raw_material_cost),
     labor_cost = VALUES(labor_cost),
-    international_shipping = VALUES(international_shipping);
+    international_shipping = VALUES(international_shipping),
+    currency = VALUES(currency),
+    tax_percentage = VALUES(tax_percentage),
+    valid_from = VALUES(valid_from),
+    valid_to = VALUES(valid_to),
+    is_active = VALUES(is_active);
 
 -- ============================================
 -- 17. VERIFICATION QUERIES
@@ -827,6 +945,32 @@ ADD COLUMN priority INT DEFAULT 0;
 -- Add indexes for new fields
 CREATE INDEX api_customersegment_is_active_idx ON api_customersegment(is_active);
 CREATE INDEX api_customersegment_priority_idx ON api_customersegment(priority);
+
+-- Add new fields to existing api_pricingengine table
+ALTER TABLE api_pricingengine 
+ADD COLUMN currency VARCHAR(3) DEFAULT 'DZD',
+ADD COLUMN tax_percentage DECIMAL(5,2) DEFAULT 0,
+ADD COLUMN valid_from DATETIME(6),
+ADD COLUMN valid_to DATETIME(6),
+ADD COLUMN is_active TINYINT(1) DEFAULT 1;
+
+-- Add indexes for new pricing engine fields
+CREATE INDEX api_pricingengine_currency_idx ON api_pricingengine(currency);
+CREATE INDEX api_pricingengine_is_active_idx ON api_pricingengine(is_active);
+CREATE INDEX api_pricingengine_valid_from_idx ON api_pricingengine(valid_from);
+CREATE INDEX api_pricingengine_valid_to_idx ON api_pricingengine(valid_to);
+
+-- Add new fields to existing api_blogcategory table (for existing installations)
+ALTER TABLE api_blogcategory 
+ADD COLUMN description_ar TEXT,
+ADD COLUMN icon_class VARCHAR(100),
+ADD COLUMN order_priority INT DEFAULT 0,
+ADD COLUMN is_featured TINYINT(1) DEFAULT 0,
+ADD COLUMN meta_title VARCHAR(255);
+
+-- Add indexes for new blog category fields
+CREATE INDEX api_blogcategory_order_priority_idx ON api_blogcategory(order_priority);
+CREATE INDEX api_blogcategory_is_featured_idx ON api_blogcategory(is_featured);
 
 -- ============================================
 -- 20. VERIFICATION QUERIES

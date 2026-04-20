@@ -12,6 +12,7 @@ from django.db import transaction
 from django.db.models import Count, F
 from api.models.wishlist import Wishlist, WishlistSettings
 from api.models.product import Product
+from core.schema import IsAuthenticatedMixin
 
 User = get_user_model()
 
@@ -142,6 +143,10 @@ class WishlistSettingsInput(graphene.InputObjectType):
     auto_remove_out_of_stock = Boolean()
     auto_remove_discontinued = Boolean()
     make_public = Boolean()
+    privacy_level = String()
+    max_items_allowed = Int()
+    notify_on_price_drop = Boolean()
+    alert_on_low_stock = Boolean()
 
 
 # Enhanced Mutations
@@ -509,7 +514,67 @@ class WishlistQuery(ObjectType):
                 push_notifications=True,
                 auto_remove_out_of_stock=False,
                 auto_remove_discontinued=True,
-                make_public=False
+                make_public=False,
+                privacy_level='private',
+                max_items_allowed=100,
+                notify_on_price_drop=True,
+                alert_on_low_stock=True
+            )
+
+
+class GenerateShareToken(Mutation):
+    """Generate or reset share token for wishlist"""
+    
+    success = Boolean()
+    message = String()
+    share_token = Field(String)
+    share_url = Field(String)
+    settings = Field(WishlistSettingsType)
+
+    def mutate(self, info):
+        user = info.context.user
+        if not user.is_authenticated:
+            return GenerateShareToken(
+                success=False, 
+                message="Authentication required"
+            )
+        
+        try:
+            with transaction.atomic():
+                settings, created = WishlistSettings.objects.get_or_create(
+                    user=user,
+                    defaults={
+                        'items_per_page': 20,
+                        'sort_by': 'created_at',
+                        'sort_order': 'desc',
+                        'email_notifications': True,
+                        'push_notifications': True,
+                        'auto_remove_out_of_stock': False,
+                        'auto_remove_discontinued': True,
+                        'make_public': False,
+                        'privacy_level': 'private',
+                        'max_items_allowed': 100,
+                        'notify_on_price_drop': True,
+                        'alert_on_low_stock': True,
+                    }
+                )
+                
+                # Generate new share token
+                share_token = settings.generate_share_token()
+                share_url = settings.get_share_url()
+                
+                return GenerateShareToken(
+                    success=True,
+                    message="Share token generated successfully",
+                    share_token=share_token,
+                    share_url=share_url,
+                    settings=settings
+                )
+                
+        except Exception as e:
+            return GenerateShareToken(
+                success=False, 
+                message=str(e)
             )
 
 
@@ -534,3 +599,4 @@ class WishlistMutation(ObjectType):
     update_wishlist_item = UpdateWishlistItem.Field()
     move_to_cart = MoveToCart.Field()
     update_wishlist_settings = UpdateWishlistSettings.Field()
+    generate_share_token = GenerateShareToken.Field()

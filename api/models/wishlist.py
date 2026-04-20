@@ -136,11 +136,36 @@ class WishlistSettings(models.Model):
         default=False,
         help_text="Make wishlist publicly visible"
     )
+    privacy_level = models.CharField(
+        max_length=10,
+        choices=[
+            ('private', 'Private'),
+            ('public', 'Public'),
+            ('shared', 'Shared'),
+        ],
+        default='private',
+        help_text="Privacy level for wishlist visibility"
+    )
     share_token = models.CharField(
         max_length=64,
         blank=True,
         null=True,
-        help_text="Token for sharing wishlist"
+        unique=True,
+        help_text="Unique token for sharing wishlist"
+    )
+    max_items_allowed = models.IntegerField(
+        default=100,
+        help_text="Maximum number of items allowed in wishlist"
+    )
+    
+    # Marketing and notification preferences
+    notify_on_price_drop = models.BooleanField(
+        default=True,
+        help_text="Notify when wishlist item price drops"
+    )
+    alert_on_low_stock = models.BooleanField(
+        default=True,
+        help_text="Alert when wishlist items have low stock"
     )
     
     created_at = models.DateTimeField(auto_now_add=True)

@@ -20,17 +20,21 @@ class BlogCategoryType(DjangoObjectType):
     name_en = String()
     slug = String()
     description = String()
+    description_ar = String()
     
     # SEO and metadata
     meta_title = String()
     meta_description = String()
     
     # Visual
+    icon_class = String()
     image = String()
     color = String()
     
     # Organization
+    order_priority = Int()
     sort_order = Int()
+    is_featured = Boolean()
     is_active = Boolean()
     
     # Computed fields
@@ -47,7 +51,8 @@ class BlogCategoryType(DjangoObjectType):
             'name_ar': ['exact', 'icontains'],
             'name_en': ['exact', 'icontains'],
             'slug': ['exact'],
-            'is_active': ['exact'],
+            'is_featured': ['exact'],
+            'order_priority': ['exact'],
             'sort_order': ['exact'],
         }
 
@@ -66,6 +71,7 @@ class BlogPostType(DjangoObjectType):
     # Content
     content_ar = String()
     content_en = String()
+    excerpt = String()
     summary_ar = String()
     summary_en = String()
     
@@ -79,6 +85,7 @@ class BlogPostType(DjangoObjectType):
     
     # Media
     featured_image = String()
+    featured_image_url = String()
     gallery_images = List(String)
     
     # SEO and metadata
@@ -89,11 +96,15 @@ class BlogPostType(DjangoObjectType):
     
     # Publishing
     status = String()
+    is_published = Boolean()
     is_featured = Boolean()
     is_top_story = Boolean()
+    scheduled_at = DateTime()
     
     # Analytics
     views = Int()
+    view_count = Int()
+    read_time_minutes = Int()
     read_time = Int()
     shares = Int()
     likes = Int()
@@ -119,8 +130,10 @@ class BlogPostType(DjangoObjectType):
             'category': ['exact'],
             'author': ['exact'],
             'status': ['exact'],
+            'is_published': ['exact'],
             'is_featured': ['exact'],
             'is_top_story': ['exact'],
+            'scheduled_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
             'published_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
@@ -269,17 +282,21 @@ class BlogCategoryInput(graphene.InputObjectType):
     name_ar = String(required=True)
     name_en = String(required=True)
     description = String()
+    description_ar = String()
     
     # SEO and metadata
     meta_title = String()
     meta_description = String()
     
     # Visual
+    icon_class = String()
     image = String()
     color = String()
     
     # Organization
+    order_priority = Int(default_value=0)
     sort_order = Int(default_value=0)
+    is_featured = Boolean(default_value=False)
     is_active = Boolean(default_value=True)
 
 
@@ -291,6 +308,7 @@ class BlogPostInput(graphene.InputObjectType):
     # Content
     content_ar = String(required=True)
     content_en = String(required=True)
+    excerpt = String()
     summary_ar = String()
     summary_en = String()
     
@@ -303,6 +321,7 @@ class BlogPostInput(graphene.InputObjectType):
     
     # Media
     featured_image = String()
+    featured_image_url = String()
     gallery_images = List(String)
     
     # SEO and metadata
@@ -313,8 +332,10 @@ class BlogPostInput(graphene.InputObjectType):
     
     # Publishing
     status = String()
+    is_published = Boolean()
     is_featured = Boolean()
     is_top_story = Boolean()
+    scheduled_at = DateTime()
     
     # Comments settings
     comments_enabled = Boolean(default_value=True)
@@ -420,6 +441,85 @@ class CreateBlogCategory(Mutation):
             )
 
 
+class UpdateBlogCategory(Mutation):
+    """Update an existing blog category"""
+    
+    class Arguments:
+        id = ID(required=True)
+        input = BlogCategoryInput(required=True)
+
+    success = Boolean()
+    message = String()
+    blog_category = Field(BlogCategoryType)
+    errors = List(String)
+
+    def mutate(self, info, id, input):
+        try:
+            blog_category = BlogCategory.objects.get(id=id)
+            
+            # Update slug if name_en changed and slug not provided
+            if 'name_en' in input and 'slug' not in input:
+                input['slug'] = slugify(input['name_en'])
+            
+            for field, value in input.items():
+                setattr(blog_category, field, value)
+            
+            blog_category.save()
+            
+            return UpdateBlogCategory(
+                success=True,
+                message="Blog category updated successfully",
+                blog_category=blog_category
+            )
+            
+        except BlogCategory.DoesNotExist:
+            return UpdateBlogCategory(
+                success=False,
+                message="Blog category not found",
+                errors=["Blog category not found"]
+            )
+        except Exception as e:
+            return UpdateBlogCategory(
+                success=False,
+                message=str(e),
+                errors=[str(e)]
+            )
+
+
+class DeleteBlogCategory(Mutation):
+    """Delete a blog category"""
+    
+    class Arguments:
+        id = ID(required=True)
+
+    success = Boolean()
+    message = String()
+    errors = List(String)
+
+    def mutate(self, info, id):
+        try:
+            blog_category = BlogCategory.objects.get(id=id)
+            blog_category.delete()
+            
+            return DeleteBlogCategory(
+                success=True,
+                message="Blog category deleted successfully"
+            )
+            
+        except BlogCategory.DoesNotExist:
+            return DeleteBlogCategory(
+                success=False,
+                message="Blog category not found",
+                errors=["Blog category not found"]
+            )
+        except Exception as e:
+            return DeleteBlogCategory(
+                success=False,
+                message=str(e),
+                errors=[str(e)]
+            )
+
+
 class CreateBlogPost(Mutation):
     """Create a new blog post"""
     
@@ -433,7 +533,7 @@ class CreateBlogPost(Mutation):
 
     def mutate(self, info, input):
         try:
-            from api.models.content import BlogCategory
+            from api.models.blog import BlogCategory
             
             user = info.context.user
             
@@ -477,6 +577,113 @@ class CreateBlogPost(Mutation):
                 success=False,
                 message=str(e),
                 errors=[str(e)]
+            )
+
+
+class UpdateBlogPost(Mutation):
+    """Update an existing blog post"""
+    
+    class Arguments:
+        id = ID(required=True)
+        input = BlogPostInput(required=True)
+
+    success = Boolean()
+    message = String()
+    blog_post = Field(BlogPostType)
+    errors = List(String)
+
+    def mutate(self, info, id, input):
+        try:
+            user = info.context.user
+            
+            blog_post = BlogPost.objects.get(id=id)
+            
+            # Check permissions
+            if not user.is_staff and blog_post.author != user:
+                return UpdateBlogPost(
+                    success=False,
+                    message="Permission denied",
+                    errors=["You can only update your own blog posts"]
+                )
+            
+            # Handle category
+            if 'category_id' in input:
+                category = BlogCategory.objects.get(id=input['category_id'])
+                input['category'] = category
+                del input['category_id']
+            
+            # Update slug if title_en changed and slug not provided
+            if 'title_en' in input and 'slug' not in input:
+                input['slug'] = slugify(input['title_en'])
+            
+            # Auto-generate excerpt if not provided
+            if 'excerpt' not in input:
+                content = input.get('content_en') or blog_post.content_en
+                if content:
+                    input['excerpt'] = content[:300] + '...' if len(content) > 300 else content
+            
+            # Auto-calculate reading time if content changed
+            if 'content_en' in input:
+                word_count = len(input['content_en'].split())
+                input['read_time_minutes'] = max(1, word_count // 200)
+            
+            for field, value in input.items():
+                setattr(blog_post, field, value)
+            
+            blog_post.save()
+            
+            return UpdateBlogPost(
+                success=True,
+                message="Blog post updated successfully",
+                blog_post=blog_post
+            )
+            
+        except BlogPost.DoesNotExist:
+            return UpdateBlogPost(
+                success=False,
+                message="Blog post not found",
+                errors=["Blog post not found"]
+            )
+        except Exception as e:
+            return UpdateBlogPost(
+                success=False,
+                message=str(e),
+                errors=[str(e)]
+            )
+
+
+class IncrementBlogPostViewCount(Mutation):
+    """Increment view count for a blog post"""
+    
+    class Arguments:
+        id = ID(required=True)
+
+    success = Boolean()
+    message = String()
+    view_count = Int()
+
+    def mutate(self, info, id):
+        try:
+            blog_post = BlogPost.objects.get(id=id)
+            blog_post.increment_view_count()
+            
+            return IncrementBlogPostViewCount(
+                success=True,
+                message="View count incremented successfully",
+                view_count=blog_post.view_count
+            )
+            
+        except BlogPost.DoesNotExist:
+            return IncrementBlogPostViewCount(
+                success=False,
+                message="Blog post not found",
+                view_count=0
+            )
+        except Exception as e:
+            return IncrementBlogPostViewCount(
+                success=False,
+                message=str(e),
+                view_count=0
             )
 
 
@@ -526,7 +733,7 @@ class CreateDesign(Mutation):
 
     def mutate(self, info, input):
         try:
-            from api.models.content import DesignCategory
+            from api.models.design import DesignCategory
             
             user = info.context.user
             
@@ -579,8 +786,8 @@ class ContentQuery(ObjectType):
     sync_logs = List(ERPNextSyncLogNode, limit=Int(default=50), status=String())
     
     def resolve_blog_categories(self, info):
-        """Get all blog categories"""
-        return BlogCategory.objects.filter(is_active=True)
+        """Get all blog categories ordered by priority and name"""
+        return BlogCategory.objects.filter(is_active=True).order_by('order_priority', 'name_ar')
     
     def resolve_blog_category(self, info, id):
         """Get blog category by ID"""
@@ -659,8 +866,13 @@ class ContentMutation(ObjectType):
     """Content mutations"""
     
     create_blog_category = CreateBlogCategory.Field()
+    update_blog_category = UpdateBlogCategory.Field()
+    delete_blog_category = DeleteBlogCategory.Field()
     create_blog_post = CreateBlogPost.Field()
+    update_blog_post = UpdateBlogPost.Field()
+    increment_blog_post_view_count = IncrementBlogPostViewCount.Field()
     create_design_category = CreateDesignCategory.Field()
+    create_design = CreateDesign.Field()
 
 
 # Node Classes from core/schema.py

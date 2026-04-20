@@ -8,7 +8,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils import timezone
-from api.models.user import UserProfile
+from api.models.user import UserProfile, UserProfileBeforeUpdate
 
 User = get_user_model()
 
@@ -19,6 +19,41 @@ class GroupType(DjangoObjectType):
     """
     class Meta:
         model = Group
+        interfaces = (relay.Node,)
+        fields = '__all__'
+
+
+class UserProfileType(DjangoObjectType):
+    """
+    Enhanced UserProfile type with comprehensive fields
+    """
+    user = Field('UserType')
+    phone = String()
+    address = String()
+    bio = String()
+    avatar = String()
+    preferences = graphene.JSONString()
+    settings = graphene.JSONString()
+    
+    # Additional fields
+    date_of_birth = graphene.Date()
+    gender = String()
+    
+    created_at = DateTime()
+    updated_at = DateTime()
+
+    class Meta:
+        model = UserProfile
+        interfaces = (relay.Node,)
+        fields = '__all__'
+
+
+class UserProfileBeforeUpdateType(DjangoObjectType):
+    """
+    UserProfile audit trail type
+    """
+    class Meta:
+        model = UserProfileBeforeUpdate
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -354,6 +389,9 @@ class UpdateProfile(Mutation):
         address = String()
         bio = String()
         preferences = graphene.JSONString()
+        update_reason = String()
+        change_type = String()
+        device_info = String()
 
     success = Boolean()
     message = String()
@@ -361,7 +399,7 @@ class UpdateProfile(Mutation):
     profile = Field(UserProfileType)
     errors = List(String)
 
-    def mutate(self, info, firstName=None, lastName=None, email=None, phone=None, address=None, bio=None, preferences=None):
+    def mutate(self, info, firstName=None, lastName=None, email=None, phone=None, address=None, bio=None, preferences=None, update_reason=None, change_type=None, device_info=None):
         user = info.context.user
         
         if not user.is_authenticated:
@@ -384,6 +422,24 @@ class UpdateProfile(Mutation):
             
             # Get or create UserProfile
             profile, created = UserProfile.objects.get_or_create(user=user)
+            
+            # Create audit snapshot before updating if profile exists and has changes
+            if not created and any([phone is not None, address is not None, bio is not None, preferences is not None]):
+                UserProfileBeforeUpdate.objects.create(
+                    user_profile=profile,
+                    phone=profile.phone,
+                    address=profile.address,
+                    bio=profile.bio,
+                    avatar=profile.avatar,
+                    preferences=profile.preferences,
+                    settings=profile.settings,
+                    update_reason=update_reason,
+                    updated_by=user,
+                    device_info=device_info,
+                    change_type=change_type or 'profile_update',
+                    original_created_at=profile.created_at,
+                    original_updated_at=profile.updated_at
+                )
             
             # Update UserProfile fields
             if phone is not None:
@@ -509,6 +565,30 @@ class UserQuery(ObjectType):
     user = Field(UserType, id=ID(required=True))
     users = List(UserType)
     users_connection = DjangoFilterConnectionField(UserType)
+    profile_history = List(UserProfileBeforeUpdateType, user_id=ID())
+    
+    def resolve_profile_history(self, info, user_id=None):
+        """Get profile audit history for current user or specified user"""
+        user = info.context.user
+        if not user.is_authenticated:
+            return []
+        
+        # If user_id is provided and user is staff, allow viewing other users' history
+        if user_id and user.is_staff:
+            try:
+                target_user = User.objects.get(id=user_id)
+                profile = UserProfile.objects.filter(user=target_user).first()
+                if profile:
+                    return UserProfileBeforeUpdate.objects.filter(user_profile=profile)
+                return []
+            except User.DoesNotExist:
+                return []
+        
+        # Otherwise, return current user's history
+        profile = UserProfile.objects.filter(user=user).first()
+        if profile:
+            return UserProfileBeforeUpdate.objects.filter(user_profile=profile)
+        return []
     
     def resolve_me(self, info):
         """Get current authenticated user"""

@@ -84,10 +84,15 @@ class CustomerSegmentType(DjangoObjectType):
     
     # Segment criteria
     criteria = JSONString()
+    criteria_rules = JSONString()
     
     # Status and priority
     is_active = Boolean()
     priority = Int()
+    status = String()
+    
+    # Sync tracking
+    last_sync_date = DateTime()
     
     created_at = DateTime()
     updated_at = DateTime()
@@ -99,6 +104,32 @@ class CustomerSegmentType(DjangoObjectType):
         filter_fields = {
             'is_active': ['exact'],
             'priority': ['exact', 'lt', 'lte', 'gt', 'gte'],
+            'status': ['exact', 'in'],
+            'last_sync_date': ['exact', 'lt', 'lte', 'gt', 'gte'],
+        }
+
+
+class CustomerSegmentUserType(DjangoObjectType):
+    """Customer segment user relationship type"""
+    id = graphene.ID(required=True)
+    customersegment = Field(CustomerSegmentType)
+    user = Field(lambda: UserType)
+    
+    # New fields for enhanced relationship tracking
+    joined_at = DateTime()
+    added_by_ai = Boolean()
+    engagement_score = Int()
+
+    class Meta:
+        model = CustomerSegmentUser
+        interfaces = (relay.Node,)
+        fields = '__all__'
+        filter_fields = {
+            'customersegment': ['exact'],
+            'user': ['exact'],
+            'joined_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
+            'added_by_ai': ['exact'],
+            'engagement_score': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
 
 
@@ -111,49 +142,30 @@ class PricingEngineType(DjangoObjectType):
     labor_cost = Float()
     international_shipping = Float()
     
-    # Overhead and profit
-    overhead_percentage = Float()
-    profit_margin = Float()
+    # New fields
+    currency = String()
+    tax_percentage = Float()
+    valid_from = DateTime()
+    valid_to = DateTime()
+    is_active = Boolean()
     
-    # Dynamic pricing factors
-    demand_multiplier = Float()
-    competition_factor = Float()
-    seasonality_factor = Float()
-    inventory_factor = Float()
-    
-    # AI pricing settings
-    ai_pricing_enabled = Boolean()
-    ai_model_confidence = Float()
-    min_confidence_for_pricing = Float()
-    
-    # Price ranges and limits
-    min_price_margin = Float()
-    max_price_increase = Float()
-    
-    # Regional pricing
-    regional_pricing_enabled = Boolean()
-    regional_multipliers = JSONString()
-    
-    # Customer segmentation pricing
-    customer_segment_pricing = Boolean()
-    segment_multipliers = JSONString()
-    
-    # Time-based pricing
-    time_based_pricing = Boolean()
-    hour_multipliers = JSONString()
-    day_multipliers = JSONString()
-    
-    # Update frequency
-    auto_update_frequency = Int()
-    last_update = DateTime()
-    
-    created_at = DateTime()
-    updated_at = DateTime()
+    # Computed fields
+    total_cost = Float()
 
     class Meta:
         model = PricingEngine
         interfaces = (relay.Node,)
         fields = '__all__'
+        filter_fields = {
+            'currency': ['exact'],
+            'is_active': ['exact'],
+            'valid_from': ['exact', 'lt', 'lte', 'gt', 'gte'],
+            'valid_to': ['exact', 'lt', 'lte', 'gt', 'gte'],
+        }
+
+    def resolve_total_cost(self, info):
+        """Calculate total cost including tax"""
+        return self.calculate_total_cost()
 
 
 class DashboardSettingsType(DjangoObjectType):
@@ -163,12 +175,19 @@ class DashboardSettingsType(DjangoObjectType):
     
     # Layout configuration
     layout = JSONString()
+    layout_json = JSONString()
     
     # Widget configuration
     widgets = JSONString()
     
     # Preferences
     preferences = JSONString()
+    
+    # New UI customization fields
+    refresh_interval = Int()
+    show_notifications = Boolean()
+    primary_color = String()
+    default_chart_type = String()
     
     # Data filters
     default_date_range = String()
@@ -226,10 +245,15 @@ class CustomerSegmentInput(graphene.InputObjectType):
     name = String(required=True)
     description = String()
     criteria = JSONString()
+    criteria_rules = JSONString()
     
     # Status and priority
     is_active = Boolean(default_value=True)
     priority = Int(default_value=0)
+    status = String(default_value='active')
+    
+    # Sync tracking
+    last_sync_date = DateTime()
 
 
 class PricingEngineInput(graphene.InputObjectType):
@@ -239,47 +263,26 @@ class PricingEngineInput(graphene.InputObjectType):
     labor_cost = Float()
     international_shipping = Float()
     
-    # Overhead and profit
-    overhead_percentage = Float()
-    profit_margin = Float()
-    
-    # Dynamic pricing factors
-    demand_multiplier = Float()
-    competition_factor = Float()
-    seasonality_factor = Float()
-    inventory_factor = Float()
-    
-    # AI pricing settings
-    ai_pricing_enabled = Boolean()
-    ai_model_confidence = Float()
-    min_confidence_for_pricing = Float()
-    
-    # Price ranges and limits
-    min_price_margin = Float()
-    max_price_increase = Float()
-    
-    # Regional pricing
-    regional_pricing_enabled = Boolean()
-    regional_multipliers = JSONString()
-    
-    # Customer segmentation pricing
-    customer_segment_pricing = Boolean()
-    segment_multipliers = JSONString()
-    
-    # Time-based pricing
-    time_based_pricing = Boolean()
-    hour_multipliers = JSONString()
-    day_multipliers = JSONString()
-    
-    # Update frequency
-    auto_update_frequency = Int()
+    # New fields
+    currency = String()
+    tax_percentage = Float()
+    valid_from = DateTime()
+    valid_to = DateTime()
+    is_active = Boolean()
 
 
 class DashboardSettingsInput(graphene.InputObjectType):
     """Input for dashboard settings"""
     layout = JSONString()
+    layout_json = JSONString()
     widgets = JSONString()
     preferences = JSONString()
+    
+    # New UI customization fields
+    refresh_interval = Int()
+    show_notifications = Boolean()
+    primary_color = String()
+    default_chart_type = String()
     
     # Data filters
     default_date_range = String()
@@ -613,6 +616,100 @@ class UpdateDashboardSettings(Mutation):
             )
 
 
+class CreatePricingEngine(Mutation):
+    """Create a new pricing engine configuration"""
+    
+    class Arguments:
+        input = PricingEngineInput(required=True)
+
+    success = Boolean()
+    message = String()
+    pricing_engine = Field(PricingEngineType)
+    errors = List(String)
+
+    def mutate(self, info, input):
+        try:
+            from api.models.analytics_new import PricingEngine
+            
+            user = info.context.user
+            
+            if not user.is_authenticated or not user.is_staff:
+                return CreatePricingEngine(
+                    success=False,
+                    message="Admin authentication required",
+                    errors=["Admin authentication required"]
+                )
+            
+            pricing_engine = PricingEngine.objects.create(**input)
+            
+            return CreatePricingEngine(
+                success=True,
+                message="Pricing engine created successfully",
+                pricing_engine=pricing_engine
+            )
+            
+        except Exception as e:
+            return CreatePricingEngine(
+                success=False,
+                message=str(e),
+                errors=[str(e)]
+            )
+
+
+class UpdatePricingEngine(Mutation):
+    """Update an existing pricing engine configuration"""
+    
+    class Arguments:
+        id = ID(required=True)
+        input = PricingEngineInput(required=True)
+
+    success = Boolean()
+    message = String()
+    pricing_engine = Field(PricingEngineType)
+    errors = List(String)
+
+    def mutate(self, info, id, input):
+        try:
+            from api.models.analytics_new import PricingEngine
+            
+            user = info.context.user
+            
+            if not user.is_authenticated or not user.is_staff:
+                return UpdatePricingEngine(
+                    success=False,
+                    message="Admin authentication required",
+                    errors=["Admin authentication required"]
+                )
+            
+            pricing_engine = PricingEngine.objects.get(id=id)
+            
+            # Update fields
+            for field, value in input.items():
+                if hasattr(pricing_engine, field):
+                    setattr(pricing_engine, field, value)
+            
+            pricing_engine.save()
+            
+            return UpdatePricingEngine(
+                success=True,
+                message="Pricing engine updated successfully",
+                pricing_engine=pricing_engine
+            )
+            
+        except PricingEngine.DoesNotExist:
+            return UpdatePricingEngine(
+                success=False,
+                message="Pricing engine not found",
+                errors=["Pricing engine not found"]
+            )
+        except Exception as e:
+            return UpdatePricingEngine(
+                success=False,
+                message=str(e),
+                errors=[str(e)]
+            )
+
+
 # Query Class
 class AnalyticsQuery(ObjectType):
     """Analytics queries"""
@@ -628,6 +725,10 @@ class AnalyticsQuery(ObjectType):
     # Customer segment queries
     customer_segments = List(CustomerSegmentType)
     customer_segment = Field(CustomerSegmentType, id=ID(required=True))
+    
+    # Customer segment user relationship queries
+    customer_segment_users = List(CustomerSegmentUserType, user_id=ID(), segment_id=ID())
+    customer_segment_user = Field(CustomerSegmentUserType, id=ID(required=True))
     
     # Pricing engine queries
     pricing_engine = Field(PricingEngineType)
@@ -697,6 +798,35 @@ class AnalyticsQuery(ObjectType):
         except CustomerSegment.DoesNotExist:
             return None
     
+    def resolve_customer_segment_users(self, info, user_id=None, segment_id=None):
+        """Get customer segment user relationships with optimization"""
+        user = info.context.user
+        if not user.is_authenticated or not user.is_staff:
+            return []
+        
+        from api.models.analytics_new import CustomerSegmentUser
+        
+        queryset = CustomerSegmentUser.objects.select_related('customersegment', 'user')
+        
+        if user_id:
+            queryset = queryset.filter(user_id=user_id)
+        if segment_id:
+            queryset = queryset.filter(customersegment_id=segment_id)
+        
+        return queryset.order_by('-joined_at')
+    
+    def resolve_customer_segment_user(self, info, id):
+        """Get customer segment user relationship by ID"""
+        user = info.context.user
+        try:
+            from api.models.analytics_new import CustomerSegmentUser
+            segment_user = CustomerSegmentUser.objects.select_related('customersegment', 'user').get(id=id)
+            if user.is_authenticated and user.is_staff:
+                return segment_user
+            return None
+        except CustomerSegmentUser.DoesNotExist:
+            return None
+    
     def resolve_pricing_engine(self, info):
         """Get pricing engine configuration (admin only)"""
         user = info.context.user
@@ -728,3 +858,5 @@ class AnalyticsMutation(ObjectType):
     create_customer_segment = CreateCustomerSegment.Field()
     update_customer_segment = UpdateCustomerSegment.Field()
     update_dashboard_settings = UpdateDashboardSettings.Field()
+    create_pricing_engine = CreatePricingEngine.Field()
+    update_pricing_engine = UpdatePricingEngine.Field()

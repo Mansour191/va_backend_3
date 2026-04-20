@@ -156,6 +156,7 @@ class ConversationHistoryType(DjangoObjectType):
     # Message content
     role = String()
     message = String()
+    message_type = String()
     
     # Source and context
     source = String()
@@ -163,8 +164,13 @@ class ConversationHistoryType(DjangoObjectType):
     
     # AI-specific fields
     confidence = Float()
+    sentiment_score = Float()
     model_used = String()
     processing_time = Float()
+    
+    # Status and tracking
+    is_read = Boolean()
+    related_project = String()
     
     # Metadata and context
     metadata = JSONString()
@@ -192,6 +198,9 @@ class ConversationHistoryType(DjangoObjectType):
             'role': ['exact'],
             'source': ['exact'],
             'language': ['exact'],
+            'message_type': ['exact'],
+            'is_read': ['exact'],
+            'related_project': ['exact'],
             'is_flagged': ['exact'],
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
@@ -247,11 +256,17 @@ class ConversationHistoryInput(graphene.InputObjectType):
     # Source and context
     source = String()
     language = String(default_value='ar')
+    message_type = String(default_value='text')
     
     # AI-specific fields
     confidence = Float()
+    sentiment_score = Float()
     model_used = String()
     processing_time = Float()
+    
+    # Status and tracking
+    is_read = Boolean(default_value=False)
+    related_project = String()
     
     # Metadata and context
     metadata = JSONString()
@@ -475,9 +490,13 @@ class AddConversationMessage(Mutation):
                 message=input['message'],
                 source=input.get('source'),
                 language=input.get('language', 'ar'),
+                message_type=input.get('message_type', 'text'),
                 confidence=input.get('confidence'),
+                sentiment_score=input.get('sentiment_score'),
                 model_used=input.get('model_used'),
                 processing_time=input.get('processing_time'),
+                is_read=input.get('is_read', False),
+                related_project=input.get('related_project'),
                 metadata=input.get('metadata', {}),
                 context=input.get('context', {})
             )
@@ -540,6 +559,55 @@ class RateConversationMessage(Mutation):
             )
         except Exception as e:
             return RateConversationMessage(
+                success=False,
+                message=str(e),
+                errors=[str(e)]
+            )
+
+
+class MarkAsRead(Mutation):
+    """Mark conversation message as read"""
+    
+    class Arguments:
+        message_id = ID(required=True)
+
+    success = Boolean()
+    message = String()
+    conversation_message = Field(ConversationHistoryType)
+    errors = List(String)
+
+    def mutate(self, info, message_id):
+        try:
+            from api.models.interaction import ConversationHistory
+            
+            user = info.context.user
+            
+            if not user.is_authenticated:
+                return MarkAsRead(
+                    success=False,
+                    message="Authentication required",
+                    errors=["Authentication required"]
+                )
+            
+            message = ConversationHistory.objects.get(id=message_id)
+            
+            message.is_read = True
+            message.save()
+            
+            return MarkAsRead(
+                success=True,
+                message="Message marked as read",
+                conversation_message=message
+            )
+            
+        except ConversationHistory.DoesNotExist:
+            return MarkAsRead(
+                success=False,
+                message="Message not found",
+                errors=["Message not found"]
+            )
+        except Exception as e:
+            return MarkAsRead(
                 success=False,
                 message=str(e),
                 errors=[str(e)]
@@ -634,3 +702,4 @@ class InteractionMutation(ObjectType):
     report_review = ReportReview.Field()
     add_conversation_message = AddConversationMessage.Field()
     rate_conversation_message = RateConversationMessage.Field()
+    mark_as_read = MarkAsRead.Field()

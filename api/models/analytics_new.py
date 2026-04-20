@@ -2,6 +2,7 @@
 AI and Analytics Models for VynilArt API
 """
 from django.db import models
+from django.utils import timezone
 from .product import Product
 
 
@@ -80,12 +81,22 @@ class CustomerSegment(models.Model):
     """
     Customer segment model matching api_customersegment table
     """
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('pending', 'Pending'),
+        ('archived', 'Archived'),
+    ]
+    
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     criteria = models.JSONField(default=dict, blank=True)
+    criteria_rules = models.JSONField(default=dict, blank=True)
     is_active = models.BooleanField(default=True)
     priority = models.IntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+    last_sync_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -96,6 +107,8 @@ class CustomerSegment(models.Model):
             models.Index(fields=['created_at']),
             models.Index(fields=['is_active']),
             models.Index(fields=['priority']),
+            models.Index(fields=['status']),
+            models.Index(fields=['last_sync_date']),
         ]
         ordering = ['-priority', 'name']
 
@@ -118,12 +131,18 @@ class CustomerSegmentUser(models.Model):
         on_delete=models.CASCADE,
         db_column='user_id'
     )
+    joined_at = models.DateTimeField(auto_now_add=True)
+    added_by_ai = models.BooleanField(default=False)
+    engagement_score = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'api_customersegment_users'
         indexes = [
             models.Index(fields=['customersegment']),
             models.Index(fields=['user']),
+            models.Index(fields=['joined_at']),
+            models.Index(fields=['added_by_ai']),
+            models.Index(fields=['engagement_score']),
         ]
         unique_together = ['customersegment', 'user']
 
@@ -139,9 +158,22 @@ class PricingEngine(models.Model):
     raw_material_cost = models.DecimalField(max_digits=10, decimal_places=2, default=500)
     labor_cost = models.DecimalField(max_digits=10, decimal_places=2, default=300)
     international_shipping = models.DecimalField(max_digits=10, decimal_places=2, default=200)
+    currency = models.CharField(max_length=3, default='DZD')
+    tax_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    valid_from = models.DateTimeField(blank=True, null=True)
+    valid_to = models.DateTimeField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'api_pricingengine'
 
     def __str__(self):
         return f"Pricing Engine - ID: {self.id}"
+
+    def calculate_total_cost(self):
+        """Calculate total cost including tax"""
+        base_cost = self.raw_material_cost + self.labor_cost + self.international_shipping
+        if self.tax_percentage:
+            tax_amount = base_cost * (self.tax_percentage / 100)
+            return base_cost + tax_amount
+        return base_cost
