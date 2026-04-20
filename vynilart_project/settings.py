@@ -150,19 +150,25 @@ AUTH_USER_MODEL = 'api.User'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# جلب رابط القاعدة من البيئة، وإذا لم يوجد نستخدم الرابط المحلي
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgres://mansour:password@localhost:5432/vynilart_db')
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default=DATABASE_URL,
         conn_max_age=600,
     )
 }
 
-CA_FILE_PATH = os.path.join(BASE_DIR, 'ca.pem')
-
-DATABASES['default']['OPTIONS'] = {
-    'sslmode': 'verify-ca',
-    'sslrootcert': CA_FILE_PATH,
-}
+# تفعيل SSL فقط للقاعدة الإنتاجية (aivencloud) أو عند وجود DATABASE_URL حقيقي
+database_url = os.getenv('DATABASE_URL', '')
+if database_url and ('aivencloud' in database_url or 'render.com' in database_url):
+    CA_FILE_PATH = os.path.join(BASE_DIR, 'ca.pem')
+    if os.path.exists(CA_FILE_PATH):
+        DATABASES['default']['OPTIONS'] = {
+            'sslmode': 'verify-ca',
+            'sslrootcert': CA_FILE_PATH,
+        }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
