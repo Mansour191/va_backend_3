@@ -2,7 +2,8 @@
 Coupon and Promotion Models for VynilArt API
 """
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, DecimalValidator
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from decimal import Decimal
 
@@ -33,7 +34,11 @@ class PromotionCoupon(models.Model):
     discount_value = models.DecimalField(
         max_digits=10, 
         decimal_places=2,
-        validators=[MinValueValidator(Decimal('0.00'))]
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            MaxValueValidator(Decimal('100.00')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ]
     )
     
     # Usage limits
@@ -54,6 +59,10 @@ class PromotionCoupon(models.Model):
         max_digits=10, 
         decimal_places=2, 
         default=0,
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ],
         help_text="Minimum order amount to use coupon"
     )
     max_discount = models.DecimalField(
@@ -61,6 +70,10 @@ class PromotionCoupon(models.Model):
         decimal_places=2, 
         blank=True, 
         null=True,
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ],
         help_text="Maximum discount amount for percentage coupons"
     )
     
@@ -135,8 +148,25 @@ class PromotionCoupon(models.Model):
     
     # Analytics and tracking
     times_used = models.IntegerField(default=0)
-    total_discount_given = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    average_order_value = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    total_discount_given = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        default=0,
+        validators=[
+            MinValueValidator(Decimal('0.00')),
+            DecimalValidator(max_digits=12, decimal_places=2)
+        ]
+    )
+    average_order_value = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        blank=True, 
+        null=True,
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ]
+    )
     
     # Attribution
     created_by = models.ForeignKey(
@@ -161,6 +191,59 @@ class PromotionCoupon(models.Model):
         ]
         ordering = ['-created_at']
 
+    def clean(self):
+        """Enhanced validation for PromotionCoupon with strict discount limits"""
+        super().clean()
+        
+        # Validate discount value based on type
+        if self.discount_type == 'percentage':
+            if self.discount_value <= 0 or self.discount_value > 100:
+                raise ValidationError({
+                    'discount_value': 'نسبة الخصم يجب أن تكون بين 1% و 100%'
+                })
+        elif self.discount_type == 'fixed':
+            if self.discount_value <= 0:
+                raise ValidationError({
+                    'discount_value': 'مبلغ الخصم يجب أن يكون أكبر من 0'
+                })
+        
+        # Validate max discount for percentage coupons
+        if self.discount_type == 'percentage' and self.max_discount:
+            if self.max_discount <= 0:
+                raise ValidationError({
+                    'max_discount': 'أقصى خصم يجب أن يكون أكبر من 0'
+                })
+        
+        # Validate dates
+        if self.valid_from and self.valid_to and self.valid_from >= self.valid_to:
+            raise ValidationError({
+                'valid_to': 'تاريخ النهاية يجب أن يكون بعد تاريخ البداية'
+            })
+        
+        # Validate Buy X Get Y configuration
+        if self.discount_type == 'buy_x_get_y':
+            if not self.buy_quantity or self.buy_quantity <= 0:
+                raise ValidationError({
+                    'buy_quantity': 'كمية الشراء يجب أن تكون أكبر من 0'
+                })
+            if not self.get_quantity or self.get_quantity <= 0:
+                raise ValidationError({
+                    'get_quantity': 'كمية الحصول يجب أن تكون أكبر من 0'
+                })
+        
+        # Validate tiered configuration
+        if self.discount_type == 'tiered' and not self.tiers:
+            raise ValidationError({
+                'tiers': 'يجب تحديد المستويات للخصم المتدرج'
+            })
+    
+    def save(self, *args, **kwargs):
+        """Override save to ensure code is uppercase and validation is applied"""
+        if self.code:
+            self.code = self.code.upper().strip()
+        self.full_clean()  # This will call clean()
+        super().save(*args, **kwargs)
+    
     def __str__(self):
         return self.code
 
@@ -193,11 +276,14 @@ class PromotionCoupon(models.Model):
         return max(0, delta.days)
 
     def calculate_discount(self, order_amount, cart_items=None):
-        """Calculate discount amount for given order"""
+        """Calculate discount amount for given order with strict 100% limit"""
         if self.discount_type == 'percentage':
+            # Ensure discount never exceeds 100% of order amount
             discount = order_amount * (self.discount_value / 100)
             if self.max_discount:
                 discount = min(discount, self.max_discount)
+            # Additional safety check - never allow discount > order amount
+            discount = min(discount, order_amount)
         elif self.discount_type == 'fixed':
             discount = min(self.discount_value, order_amount)
         elif self.discount_type == 'free_shipping':
@@ -278,14 +364,35 @@ class CouponCampaign(models.Model):
         max_digits=12, 
         decimal_places=2, 
         blank=True, 
-        null=True
+        null=True,
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=12, decimal_places=2)
+        ]
     )
     
     # Performance tracking
     coupons_count = models.IntegerField(default=0)
     total_usage = models.IntegerField(default=0)
-    total_discount_given = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    conversion_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    total_discount_given = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        default=0,
+        validators=[
+            MinValueValidator(Decimal('0.00')),
+            DecimalValidator(max_digits=12, decimal_places=2)
+        ]
+    )
+    conversion_rate = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=0,
+        validators=[
+            MinValueValidator(Decimal('0.00')),
+            MaxValueValidator(Decimal('100.00')),
+            DecimalValidator(max_digits=5, decimal_places=2)
+        ]
+    )
     
     # Attribution
     created_by = models.ForeignKey(

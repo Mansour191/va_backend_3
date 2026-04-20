@@ -60,7 +60,7 @@ class SystemConfiguration(models.Model):
     
     # Organization and environment
     organization = models.ForeignKey(
-        'api_organization.Organization',
+        'api.Organization',
         on_delete=models.CASCADE,
         related_name='configurations'
     )

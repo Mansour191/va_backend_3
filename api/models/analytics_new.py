@@ -2,6 +2,7 @@
 AI and Analytics Models for VynilArt API
 """
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 from .product import Product
 
@@ -56,11 +57,31 @@ class Forecast(models.Model):
     )
     forecast_type = models.CharField(max_length=50)
     period = models.CharField(max_length=20)
-    predicted_demand = models.IntegerField(blank=True, null=True)
-    actual_demand = models.IntegerField(blank=True, null=True)
-    error_margin = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    predicted_demand = models.IntegerField(
+        blank=True, 
+        null=True,
+        validators=[MinValueValidator(0)]
+    )
+    actual_demand = models.IntegerField(
+        blank=True, 
+        null=True,
+        validators=[MinValueValidator(0)]
+    )
+    error_margin = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        blank=True, 
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
     algorithm_used = models.CharField(max_length=100, blank=True, null=True)
-    confidence = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    confidence = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        blank=True, 
+        null=True,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -155,11 +176,31 @@ class PricingEngine(models.Model):
     Pricing engine model matching api_pricingengine table
     """
     id = models.AutoField(primary_key=True)
-    raw_material_cost = models.DecimalField(max_digits=10, decimal_places=2, default=500)
-    labor_cost = models.DecimalField(max_digits=10, decimal_places=2, default=300)
-    international_shipping = models.DecimalField(max_digits=10, decimal_places=2, default=200)
+    raw_material_cost = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=500,
+        validators=[MinValueValidator(0)]
+    )
+    labor_cost = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=300,
+        validators=[MinValueValidator(0)]
+    )
+    international_shipping = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=200,
+        validators=[MinValueValidator(0)]
+    )
     currency = models.CharField(max_length=3, default='DZD')
-    tax_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    tax_percentage = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
     valid_from = models.DateTimeField(blank=True, null=True)
     valid_to = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)

@@ -2,12 +2,16 @@
 Analytics Schema for VynilArt API
 """
 import graphene
-from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString
+from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString, Mutation
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django.db.models import Count, Avg, Sum
 from decimal import Decimal
 from graphene import Mutation as BaseMutation
+from api.models.analytics_new import BehaviorTracking, Forecast, CustomerSegment, CustomerSegmentUser, PricingEngine
+from api.models.dashboard import DashboardSettings
+from api.schema.user_schema import UserType
+from api.schema.product_schema import ProductType, CategoryType
 
 
 class BehaviorTrackingType(DjangoObjectType):

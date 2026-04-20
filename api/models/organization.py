@@ -147,17 +147,26 @@ class Organization(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name=_('أنشئ بواسطة'),
-        help_text=_('المستخدم الذي أنشأ السجل'),
+        verbose_name=_('that created the record'),
+        help_text=_('User who created the record'),
         related_name='created_organizations'
+    )
+    created_by_user = models.ForeignKey(
+        'api.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_('Created by User'),
+        help_text=_('User who created the record (alias for created_by)'),
+        related_name='created_by_user_organizations'
     )
     base_city = models.ForeignKey(
         Shipping,
         on_delete=models.SET_NULL, 
         null=True,
         blank=True,
-        verbose_name=_('المدينة الأساسية'),
-        help_text=_('المدينة التي يقع فيها المقر الرئيسي'),
+        verbose_name=_('Base City'),
+        help_text=_('City where the headquarters is located'),
         related_name='organizations'
     )
     
@@ -180,8 +189,8 @@ class Organization(models.Model):
     objects = OrganizationManager()
     
     class Meta:
-        verbose_name = _('المؤسسة')
-        verbose_name_plural = _('المؤسسات')
+        verbose_name = _('Organization')
+        verbose_name_plural = _('Organizations')
         ordering = ['-created_at']
         db_table = 'api_organization'
         db_tablespace = ''
@@ -317,8 +326,8 @@ class Social(models.Model):
     )
     
     class Meta:
-        verbose_name = _('رابط اجتماعي')
-        verbose_name_plural = _('الروابط الاجتماعية')
+        verbose_name = _('Social Link')
+        verbose_name_plural = _('Social Links')
         ordering = ['order_index', 'platform_name']
         db_table = 'api_social'
         db_tablespace = ''

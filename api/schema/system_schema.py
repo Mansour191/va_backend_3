@@ -2,11 +2,17 @@
 System Schema for VynilArt API
 """
 import graphene
-from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString
+from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString, Mutation
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django.db.models import Count, Avg
 from django.utils import timezone
+from api.models.notification import Notification
+from api.models.erpnext import ERPNextSyncLog
+from api.models.conversation import ConversationHistory
+from api.models.dashboard import DashboardSettings
+from api.models.system import SystemConfiguration
+from api.schema.user_schema import UserType
 
 
 class NotificationType(DjangoObjectType):
@@ -56,16 +62,9 @@ class NotificationType(DjangoObjectType):
         interfaces = (relay.Node,)
         fields = '__all__'
         filter_fields = {
-            'user': ['exact'],
             'type': ['exact'],
-            'priority': ['exact'],
-            'category': ['exact'],
             'is_read': ['exact'],
-            'is_archived': ['exact'],
-            'is_starred': ['exact'],
-            'recipient_type': ['exact'],
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
-            'expires_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
 
     def resolve_is_expired(self, info):
@@ -158,7 +157,7 @@ class SystemConfigurationType(DjangoObjectType):
     requires_restart = Boolean()
     
     # Organization and environment
-    organization = Field(lambda: OrganizationType)
+    # organization = Field(lambda: OrganizationType)  # OrganizationType not defined
     environment = String()
     
     # Audit trail

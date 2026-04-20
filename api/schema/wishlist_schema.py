@@ -12,7 +12,17 @@ from django.db import transaction
 from django.db.models import Count, F
 from api.models.wishlist import Wishlist, WishlistSettings
 from api.models.product import Product
-from core.schema import IsAuthenticatedMixin
+from api.schema.user_schema import UserType
+from api.schema.product_schema import ProductType
+
+
+# Authentication Mixin (defined locally to avoid circular import)
+class IsAuthenticatedMixin:
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        if info.context.user.is_authenticated:
+            return queryset
+        return queryset.none()
 
 User = get_user_model()
 
@@ -581,8 +591,8 @@ class GenerateShareToken(Mutation):
 # Node Classes from core/schema.py
 class WishlistNode(DjangoObjectType, IsAuthenticatedMixin):
     """Enhanced wishlist node with product details"""
-    user = Field('UserNode')
-    product = Field('ProductNode')
+    user = Field(lambda: UserType)
+    product = Field(lambda: ProductType)
     
     class Meta:
         model = Wishlist

@@ -25,6 +25,18 @@ from .schema.review_schema import ReviewQuery, ReviewMutation, ReviewType, Revie
 from .schema.design_schema import DesignQuery, DesignMutation, DesignType, DesignCategoryType
 from .schema.notification_schema import NotificationQuery, NotificationMutation, NotificationType, AlertType
 from .schema.smart_alert_schema import SmartAlertQuery, SmartAlertMutation, SmartAlertType
+from .schema.user_schema import UserQuery, UserMutation
+from .schema.product_schema import ProductQuery, ProductMutation
+from .schema.interaction_schema import InteractionQuery
+from .schema.content_schema import ContentQuery
+from .schema.system_schema import SystemQuery
+from .schema.alert_schema import AlertQuery
+from .schema.organization_schema import OrganizationQuery
+from .schema.payment_method_schema import PaymentMethodQuery
+from .schema.analytics_schema import AnalyticsQuery
+from .schema.shipping_schema import ShippingQuery
+from .schema.order_schema import OrderQuery
+from .schema.coupon_schema import CouponQuery
 
 User = get_user_model()
 
@@ -869,7 +881,7 @@ class RemoveMaterialFromProduct(Mutation):
 
 
 # Root Query
-class Query(ObjectType, CartQuery, WishlistQuery, ReviewQuery, DesignQuery, NotificationQuery, SmartAlertQuery):
+class Query(ObjectType, UserQuery, ProductQuery, CartQuery, WishlistQuery, ReviewQuery, DesignQuery, NotificationQuery, SmartAlertQuery, InteractionQuery, ContentQuery, SystemQuery, AlertQuery, OrganizationQuery, PaymentMethodQuery, AnalyticsQuery, ShippingQuery, OrderQuery, CouponQuery):
     """
     Root query for API models
     """
@@ -953,7 +965,7 @@ class Query(ObjectType, CartQuery, WishlistQuery, ReviewQuery, DesignQuery, Noti
 
 
 # Root Mutation
-class Mutation(ObjectType, CartMutation, WishlistMutation, ReviewMutation, DesignMutation, NotificationMutation, SmartAlertMutation):
+class Mutation(ObjectType, UserMutation, ProductMutation, CartMutation, WishlistMutation, ReviewMutation, DesignMutation, NotificationMutation, SmartAlertMutation):
     """
     Root mutation for API models
     """

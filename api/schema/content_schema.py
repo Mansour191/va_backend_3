@@ -2,15 +2,20 @@
 Content Schema for VynilArt API
 """
 import graphene
-from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString
+from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString, Mutation
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django.db.models import Count, Avg
 from django.utils.text import slugify
-from api.models.review import Review, ReviewReport
-from api.models.design import DesignCategory, Design
+from api.models.review import Review, ReviewReport, DesignCategory, Design
 from api.models.blog import BlogCategory, BlogPost
-from api.models.system import Notification, ERPNextSyncLog, BehaviorTracking, Forecast, CustomerSegment, PricingEngine, ConversationHistory, DashboardSettings, WishlistSettings
+from api.models.notification import Notification
+from api.models.erpnext import ERPNextSyncLog
+from api.models.conversation import ConversationHistory
+from api.models.dashboard import DashboardSettings
+from api.models.wishlist import WishlistSettings
+from api.schema.user_schema import UserType
+from api.schema.product_schema import ProductType
 
 
 class BlogCategoryType(DjangoObjectType):
@@ -782,8 +787,8 @@ class ContentQuery(ObjectType):
     featured_designs = List(DesignType)
     approved_designs = List(DesignType)
     
-    # ERPNext sync queries
-    sync_logs = List(ERPNextSyncLogNode, limit=Int(default=50), status=String())
+    # ERPNext sync queries - commented out due to class definition order
+    # sync_logs = List(ERPNextSyncLogNode, limit=Int(default=50), status=String())
     
     def resolve_blog_categories(self, info):
         """Get all blog categories ordered by priority and name"""
@@ -878,11 +883,11 @@ class ContentMutation(ObjectType):
 # Node Classes from core/schema.py
 class ReviewNode(DjangoObjectType):
     """Review node with product details"""
-    user = Field('UserNode')
-    product = Field('ProductNode')
+    user = Field(lambda: UserType)
+    product = Field(lambda: ProductType)
     
     class Meta:
-        model = models.Review
+        model = Review
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -890,7 +895,7 @@ class ReviewNode(DjangoObjectType):
 class ReviewReportNode(DjangoObjectType):
     """Review report node"""
     class Meta:
-        model = models.ReviewReport
+        model = ReviewReport
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -898,17 +903,17 @@ class ReviewReportNode(DjangoObjectType):
 class DesignCategoryNode(DjangoObjectType):
     """Design category node"""
     class Meta:
-        model = models.DesignCategory
+        model = DesignCategory
         interfaces = (relay.Node,)
         fields = '__all__'
 
 
 class DesignNode(DjangoObjectType):
     """Design node with category relationship"""
-    category = Field('DesignCategoryNode')
+    category = Field(lambda: DesignCategoryNode)
     
     class Meta:
-        model = models.Design
+        model = Design
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -916,17 +921,17 @@ class DesignNode(DjangoObjectType):
 class BlogCategoryNode(DjangoObjectType):
     """Blog category node"""
     class Meta:
-        model = models.BlogCategory
+        model = BlogCategory
         interfaces = (relay.Node,)
         fields = '__all__'
 
 
 class BlogPostNode(DjangoObjectType):
     """Blog post node with category relationship"""
-    category = Field('BlogCategoryNode')
+    category = Field(lambda: BlogCategoryNode)
     
     class Meta:
-        model = models.BlogPost
+        model = BlogPost
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -934,7 +939,7 @@ class BlogPostNode(DjangoObjectType):
 class NotificationNode(DjangoObjectType):
     """Notification node with enhanced filtering"""
     class Meta:
-        model = models.Notification
+        model = Notification
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -942,39 +947,7 @@ class NotificationNode(DjangoObjectType):
 class ERPNextSyncLogNode(DjangoObjectType):
     """ERPNext sync log node"""
     class Meta:
-        model = models.ERPNextSyncLog
-        interfaces = (relay.Node,)
-        fields = '__all__'
-
-
-class BehaviorTrackingNode(DjangoObjectType):
-    """Behavior tracking node"""
-    class Meta:
-        model = models.BehaviorTracking
-        interfaces = (relay.Node,)
-        fields = '__all__'
-
-
-class ForecastNode(DjangoObjectType):
-    """Forecast node"""
-    class Meta:
-        model = models.Forecast
-        interfaces = (relay.Node,)
-        fields = '__all__'
-
-
-class CustomerSegmentNode(DjangoObjectType):
-    """Customer segment node"""
-    class Meta:
-        model = models.CustomerSegment
-        interfaces = (relay.Node,)
-        fields = '__all__'
-
-
-class PricingEngineNode(DjangoObjectType):
-    """Pricing engine node"""
-    class Meta:
-        model = models.PricingEngine
+        model = ERPNextSyncLog
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -982,7 +955,7 @@ class PricingEngineNode(DjangoObjectType):
 class ConversationHistoryNode(DjangoObjectType):
     """Conversation history node"""
     class Meta:
-        model = models.ConversationHistory
+        model = ConversationHistory
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -990,7 +963,7 @@ class ConversationHistoryNode(DjangoObjectType):
 class DashboardSettingsNode(DjangoObjectType):
     """Dashboard settings node"""
     class Meta:
-        model = models.DashboardSettings
+        model = DashboardSettings
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -998,7 +971,6 @@ class DashboardSettingsNode(DjangoObjectType):
 class WishlistSettingsNode(DjangoObjectType):
     """Wishlist settings node"""
     class Meta:
-        model = models.WishlistSettings
+        model = WishlistSettings
         interfaces = (relay.Node,)
         fields = '__all__'
-    create_design = CreateDesign.Field()

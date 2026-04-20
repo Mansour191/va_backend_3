@@ -2,11 +2,16 @@
 Interaction Schema for VynilArt API
 """
 import graphene
-from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString
+from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString, Mutation
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django.db.models import Count, Avg
 from decimal import Decimal
+from api.models.review import Review, ReviewReport
+from api.models.conversation import ConversationHistory
+from api.models.analytics_new import BehaviorTracking
+from api.schema.user_schema import UserType
+from api.schema.product_schema import ProductType
 
 
 class ReviewType(DjangoObjectType):
@@ -35,7 +40,7 @@ class ReviewType(DjangoObjectType):
     
     # Purchase verification
     verified_purchase = Boolean()
-    order_item = Field(lambda: OrderItemType)
+    # order_item = Field(lambda: OrderItemType)  # OrderItemType not defined
     
     # Moderation
     reported_count = Int()
@@ -52,12 +57,8 @@ class ReviewType(DjangoObjectType):
         interfaces = (relay.Node,)
         fields = '__all__'
         filter_fields = {
-            'user': ['exact'],
-            'product': ['exact'],
             'rating': ['exact', 'lt', 'lte', 'gt', 'gte'],
             'is_verified': ['exact'],
-            'is_featured': ['exact'],
-            'is_approved': ['exact'],
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
 
@@ -94,7 +95,6 @@ class ReviewReportType(DjangoObjectType):
         filter_fields = {
             'review': ['exact'],
             'user': ['exact'],
-            'status': ['exact'],
             'reason': ['exact'],
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
@@ -113,24 +113,6 @@ class BehaviorTrackingType(DjangoObjectType):
     
     # Context and metadata
     metadata = JSONString()
-    
-    # Technical information
-    ip_address = String()
-    user_agent = String()
-    referrer = String()
-    
-    # Location (if available)
-    country = String()
-    city = String()
-    
-    # Device information
-    device_type = String()
-    browser = String()
-    operating_system = String()
-    
-    # Timing
-    duration = Int()
-    created_at = DateTime()
 
     class Meta:
         model = BehaviorTracking

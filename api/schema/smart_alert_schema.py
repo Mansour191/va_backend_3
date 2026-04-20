@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import Count, Q
-from .models import SmartAlert
+from api.models.smart_alert import SmartAlert
 
 User = get_user_model()
 

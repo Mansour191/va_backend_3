@@ -2,11 +2,14 @@
 Shipping Schema for VynilArt API
 """
 import graphene
-from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString
+from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString, Mutation
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django.db.models import Count, Avg
 from decimal import Decimal
+from api.models.shipping import Shipping, ShippingMethod, ShippingPrice
+from api.models.organization import Organization
+from api.schema.organization_schema import OrganizationObjectType
 
 
 class ShippingType(DjangoObjectType):
@@ -35,7 +38,7 @@ class ShippingType(DjangoObjectType):
     pickup_point_available = Boolean()
     
     # Organization integration
-    base_city = Field(lambda: OrganizationType)
+    base_city = Field(lambda: OrganizationObjectType)
     
     # Computed fields
     available_shipping_methods = List(lambda: ShippingMethodType)
@@ -49,11 +52,9 @@ class ShippingType(DjangoObjectType):
         fields = '__all__'
         filter_fields = {
             'wilaya_id': ['exact'],
-            'wilaya_code': ['exact'],
             'name_ar': ['exact', 'icontains'],
-            'name_en': ['exact', 'icontains'],
+            'name_fr': ['exact', 'icontains'],
             'is_active': ['exact'],
-            'region': ['exact'],
         }
 
     def resolve_available_shipping_methods(self, info):
@@ -72,7 +73,7 @@ class ShippingMethodType(DjangoObjectType):
     description = String()
     
     # Organization relationship
-    organization = Field(lambda: OrganizationType)
+    organization = Field(lambda: OrganizationObjectType)
     
     created_at = DateTime()
     updated_at = DateTime()

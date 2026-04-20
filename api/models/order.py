@@ -2,7 +2,7 @@
 Order Models for VynilArt API
 """
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 import uuid
 from datetime import datetime
@@ -44,11 +44,34 @@ class Order(models.Model):
         related_name='shipping_method_orders',
         db_column='shipping_method_id'
     )
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
-    shipping_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    tax = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
+    shipping_cost = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    tax = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    discount_amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    total_amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
     status = models.CharField(max_length=20, default='pending')
     payment_method = models.CharField(max_length=20, default='cod')
     payment_status = models.BooleanField(default=False)
@@ -94,6 +117,39 @@ class Order(models.Model):
             self.shipping_cost = self.shipping_method.base_cost
         
         return (self.subtotal + self.shipping_cost + self.tax - self.discount_amount)
+
+    def clean(self):
+        """
+        Cross-validation for Order model
+        """
+        from django.core.exceptions import ValidationError
+        
+        # Validate total amount calculation
+        calculated_total = self.calculate_total_amount()
+        if self.total_amount != calculated_total:
+            raise ValidationError({
+                'total_amount': f'Total amount mismatch. Calculated: {calculated_total}, Provided: {self.total_amount}'
+            })
+        
+        # Validate discount doesn't exceed subtotal
+        if self.discount_amount > self.subtotal:
+            raise ValidationError({
+                'discount_amount': 'Discount amount cannot exceed subtotal'
+            })
+        
+        # Validate shipping cost is reasonable
+        if self.shipping_cost and self.shipping_cost > 10000:  # 10,000 DZD max shipping
+            raise ValidationError({
+                'shipping_cost': 'Shipping cost seems unusually high'
+            })
+        
+        # Validate subtotal matches sum of items
+        if hasattr(self, 'items') and self.items.exists():
+            items_subtotal = sum(item.price * item.quantity for item in self.items.all())
+            if abs(self.subtotal - items_subtotal) > 0.01:  # Allow small rounding differences
+                raise ValidationError({
+                    'subtotal': f'Subtotal mismatch with items. Calculated: {items_subtotal}, Provided: {self.subtotal}'
+                })
 
     def save(self, *args, **kwargs):
         """
@@ -149,13 +205,28 @@ class OrderItem(models.Model):
         null=True,
         db_column='material_id'
     )
-    width = models.DecimalField(max_digits=10, decimal_places=2)
-    height = models.DecimalField(max_digits=10, decimal_places=2)
+    width = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0.1)]
+    )
+    height = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0.1)]
+    )
     dimension_unit = models.CharField(max_length=10, default='cm')
     marble_texture = models.CharField(max_length=100, blank=True, null=True)
     custom_design = models.TextField(blank=True, null=True)
-    quantity = models.IntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField(
+        default=1,
+        validators=[MinValueValidator(1)]
+    )
+    price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -218,7 +289,11 @@ class Payment(models.Model):
         related_name='payments',
         db_column='order_id'
     )
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
     method = models.CharField(max_length=50)
     status = models.CharField(max_length=20, default='pending')
     transaction_id = models.CharField(max_length=100, blank=True, null=True)

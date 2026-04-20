@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from .organization import Organization, Social
+from ..models.organization import Organization, Social
 
 
 @admin.register(Organization)
@@ -52,11 +52,17 @@ class OrganizationAdmin(admin.ModelAdmin):
         }),
     )
     
+    # def has_add_permission(self, request):
+    #     """
+    #     Only allow adding if no active organization exists
+    #     """
+    #     return not Organization.objects.filter(is_active=True).exists()
+    
     def has_add_permission(self, request):
         """
-        Only allow adding if no active organization exists
+        Temporarily disabled - always allow adding
         """
-        return not Organization.objects.filter(is_active=True).exists()
+        return True
     
     def get_queryset(self, request):
         """

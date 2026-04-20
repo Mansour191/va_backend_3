@@ -176,25 +176,34 @@ class PaymentMethod(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name=_('أنشئ بواسطة'),
-        help_text=_('المستخدم الذي أنشأ طريقة الدفع'),
+        verbose_name=_('that created the record'),
+        help_text=_('User who created the payment method'),
         related_name='created_payment_methods'
+    )
+    created_by_user = models.ForeignKey(
+        'api.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_('Created by User'),
+        help_text=_('User who created the payment method (alias for created_by)'),
+        related_name='created_by_user_payment_methods'
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        verbose_name=_('تاريخ الإنشاء')
+        verbose_name=_('Creation Date')
     )
     updated_at = models.DateTimeField(
         auto_now=True,
-        verbose_name=_('تاريخ التحديث')
+        verbose_name=_('Update Date')
     )
     
     # Custom Manager
     objects = PaymentMethodManager()
     
     class Meta:
-        verbose_name = _('طريقة دفع')
-        verbose_name_plural = _('طرق الدفع')
+        verbose_name = _('Payment Method')
+        verbose_name_plural = _('Payment Methods')
         ordering = ['order_index', 'name_ar']
         db_table = 'api_payment_method'
         db_tablespace = ''

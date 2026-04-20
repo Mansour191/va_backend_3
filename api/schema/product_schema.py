@@ -235,7 +235,7 @@ class ProductType(DjangoObjectType):
     variants = List(lambda: ProductVariantType)
     available_materials = List(MaterialType)
     product_materials = List(lambda: ProductMaterialType)
-    reviews = List(lambda: ReviewType)
+    # reviews = List(lambda: ReviewType)  # Commented out - ReviewType not defined in this schema
     
     # Computed fields
     main_image = String()
@@ -262,7 +262,6 @@ class ProductType(DjangoObjectType):
             'on_sale': ['exact'],
             'stock': ['exact', 'lt', 'lte', 'gt', 'gte'],
             'base_price': ['exact', 'lt', 'lte', 'gt', 'gte'],
-            'tags': ['exact'],
             'created_at': ['exact', 'lt', 'lte', 'gt', 'gte'],
         }
 
@@ -992,7 +991,7 @@ class CategoryNode(DjangoObjectType):
         }
     
     # Add custom resolvers for tree structure
-    children = List('self')
+    children = List(lambda: CategoryNode)
     level = Int()
     
     def resolve_children(self, info):
@@ -1025,10 +1024,10 @@ class MaterialNode(DjangoObjectType):
 
 class ProductNode(DjangoObjectType):
     """Enhanced product node with relationships"""
-    images = List('ProductImageNode')
-    variants = List('ProductVariantNode')
-    available_materials = List('ProductMaterialNode')
-    category = Field('CategoryNode')
+    images = List(lambda: ProductImageNode)
+    variants = List(lambda: ProductVariantNode)
+    available_materials = List(lambda: ProductMaterialNode)
+    category = Field(lambda: CategoryNode)
     
     class Meta:
         model = Product
@@ -1065,7 +1064,7 @@ class ProductVariantNode(DjangoObjectType):
 
 class ProductMaterialNode(DjangoObjectType):
     """Product material relationship node"""
-    material = Field('MaterialNode')
+    material = Field(lambda: MaterialNode)
     
     class Meta:
         model = ProductMaterial

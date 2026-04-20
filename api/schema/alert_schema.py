@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import Count, F, Q
-from core import models
+from api.models.alert import Alert, AlertRule
 
 User = get_user_model()
 
@@ -25,7 +25,7 @@ class AlertType(DjangoObjectType):
     requires_immediate_attention = Field(Boolean)
     
     class Meta:
-        model = models.Alert
+        model = Alert
         interfaces = (relay.Node,)
         fields = '__all__'
         filter_fields = {
@@ -57,11 +57,10 @@ class AlertRuleType(DjangoObjectType):
     """Alert Rule type for managing alert rules"""
     
     class Meta:
-        model = models.AlertRule
+        model = AlertRule
         interfaces = (relay.Node,)
         fields = '__all__'
         filter_fields = {
-            'product': ['exact'],
             'alert_type': ['exact'],
             'is_active': ['exact'],
         }
@@ -346,14 +345,14 @@ class AlertQuery(ObjectType):
         if not info.context.user.is_authenticated or not info.context.user.is_staff:
             return []
         
-        return models.AlertRule.objects.all()
+        return AlertRule.objects.all()
     
     def resolve_alert_summary(self, info):
         """Get alert summary for dashboard"""
         if not info.context.user.is_authenticated or not info.context.user.is_staff:
             return {}
         
-        from api.models.alert import Alert
+        from api.models.alert import Alert, AlertRule
         
         total_alerts = Alert.objects.count()
         active_alerts = Alert.objects.active().count()

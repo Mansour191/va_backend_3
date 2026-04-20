@@ -4,21 +4,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.decorators.csrf import csrf_exempt
 from graphene_django.views import GraphQLView
-from graphene import Schema, ObjectType, String
-
-# Create simple schema for now
-class Query(ObjectType):
-    hello = String()
-
-    def resolve_hello(self, info):
-        return "Hello World!"
-
-schema = Schema(query=Query)
+from core.schema import schema
 
 # إنشاء view مخصص لتجاوز إعدادات MIDDLEWARE
 class SafeGraphQLView(GraphQLView):
     def __init__(self, **kwargs):
-        kwargs['middleware'] = []  #强制使用空的middleware
+        kwargs['middleware'] = []  #强制 استخدام空 middleware
         super().__init__(**kwargs)
 
 urlpatterns = [

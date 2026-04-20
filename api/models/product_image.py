@@ -44,7 +44,7 @@ class ProductImageEnhanced(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'api_productimage'
+        db_table = 'api_productimage_enhanced'
         indexes = [
             models.Index(fields=['product']),
             models.Index(fields=['is_main']),

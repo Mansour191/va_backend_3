@@ -8,8 +8,8 @@ from graphene_django import DjangoObjectType
 from graphene_django.converter import convert_django_field_with_choices
 from django.contrib.auth import get_user_model
 
-from .organization import Organization, Social, PlatformType
-from core.models import Shipping
+from api.models.organization import Organization, Social, PlatformType
+from api.models.shipping import Shipping
 
 
 User = get_user_model()

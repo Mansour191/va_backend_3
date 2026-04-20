@@ -2,7 +2,7 @@
 Product Models for VynilArt API
 """
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 
 
@@ -57,15 +57,30 @@ class Material(models.Model):
     name_en = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, max_length=255)
     description = models.TextField(blank=True, null=True)
-    price_per_m2 = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    price_per_m2 = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
     is_premium = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     image = models.CharField(max_length=500, blank=True, null=True)
     properties = models.JSONField(default=dict, blank=True)
     
     # Stock management fields
-    current_stock = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    min_stock_level = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    current_stock = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    min_stock_level = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
     unit = models.CharField(
         max_length=20,
         choices=[
@@ -134,10 +149,30 @@ class Product(models.Model):
     description_en = models.TextField(blank=True, null=True)
     
     # Pricing
-    base_price = models.DecimalField(max_digits=10, decimal_places=2)
-    cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    final_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    compare_at_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    base_price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2,
+        validators=[MinValueValidator(0)]
+    )
+    cost = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    final_cost = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    compare_at_price = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        blank=True, 
+        null=True,
+        validators=[MinValueValidator(0)]
+    )
     
     # Categories and classification
     category = models.ForeignKey(
@@ -152,19 +187,42 @@ class Product(models.Model):
     
     # Status and flags
     on_sale = models.BooleanField(default=False)
-    discount_percent = models.IntegerField(default=0)
+    discount_percent = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
     is_featured = models.BooleanField(default=False)
     is_new = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     
     # Inventory
-    stock = models.IntegerField(default=0)
-    stock_quantity = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    reorder_level = models.IntegerField(default=0)
-    reorder_quantity = models.IntegerField(default=0)
+    stock = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    stock_quantity = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    reorder_level = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
+    reorder_quantity = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(0)]
+    )
     
     # Physical attributes
-    weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    weight = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        blank=True, 
+        null=True,
+        validators=[MinValueValidator(0)]
+    )
     dimensions = models.CharField(max_length=100, blank=True, null=True)
     
     # SEO
@@ -383,3 +441,23 @@ class ProductMaterial(models.Model):
 
     def __str__(self):
         return f"{self.product.name_ar} - {self.material.name_ar}"
+
+    def clean(self):
+        """
+        Cross-validation for ProductMaterial model
+        """
+        from django.core.exceptions import ValidationError
+        
+        # Validate quantity_used is positive
+        if self.quantity_used <= 0:
+            raise ValidationError({'quantity_used': 'Quantity used must be positive'})
+        
+        # Validate cost_per_unit is positive
+        if self.cost_per_unit < 0:
+            raise ValidationError({'cost_per_unit': 'Cost per unit cannot be negative'})
+        
+        # Validate material has sufficient stock
+        if self.material.current_stock < self.quantity_used:
+            raise ValidationError({
+                'quantity_used': f'Insufficient material stock. Available: {self.material.current_stock}, Required: {self.quantity_used}'
+            })

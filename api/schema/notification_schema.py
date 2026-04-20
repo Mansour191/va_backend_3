@@ -26,8 +26,6 @@ class NotificationType(DjangoObjectType):
         interfaces = (relay.Node,)
         filter_fields = {
             'id': ['exact'],
-            'user': ['exact'],
-            'type': ['exact'],
             'is_read': ['exact'],
         }
     
@@ -63,9 +61,6 @@ class AlertType(DjangoObjectType):
         interfaces = (relay.Node,)
         filter_fields = {
             'id': ['exact'],
-            'user': ['exact'],
-            'type': ['exact'],
-            'is_active': ['exact'],
         }
     
     def resolve_conditions_json(self, info):

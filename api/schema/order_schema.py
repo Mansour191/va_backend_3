@@ -2,7 +2,7 @@
 Order Schema for VynilArt API
 """
 import graphene
-from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString
+from graphene import relay, ObjectType, Field, List, String, Int, Float, Boolean, DateTime, ID, JSONString, Mutation
 from graphene_django import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from django.db.models import Sum, Count, Avg
@@ -10,6 +10,18 @@ from decimal import Decimal
 from api.models.order import Order, OrderItem, OrderTimeline, Payment
 from api.models.shipping import Shipping
 from api.models.coupon import Coupon
+from api.schema.user_schema import UserType
+from api.schema.shipping_schema import ShippingType, ShippingMethodType
+from api.schema.product_schema import ProductType, MaterialType
+
+
+# Authentication Mixin
+class IsAuthenticatedMixin:
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        if info.context.user.is_authenticated:
+            return queryset
+        return queryset.none()
 
 
 class CouponType(DjangoObjectType):
@@ -877,7 +889,7 @@ class OrderQuery(ObjectType):
 class ShippingNode(DjangoObjectType):
     """Shipping node with enhanced filtering"""
     class Meta:
-        model = models.Shipping
+        model = Shipping
         interfaces = (relay.Node,)
         fields = '__all__'
         filter_fields = {
@@ -891,13 +903,13 @@ class ShippingNode(DjangoObjectType):
 
 class OrderNode(DjangoObjectType, IsAuthenticatedMixin):
     """Enhanced order node with relationships"""
-    user = Field('UserNode')
-    items = List('OrderItemNode')
-    payments = List('PaymentNode')
-    shipping = Field('ShippingNode')
+    user = Field(lambda: UserType)
+    items = List(lambda: OrderItemNode)
+    payments = List(lambda: PaymentNode)
+    shipping = Field(lambda: ShippingType)
     
     class Meta:
-        model = models.Order
+        model = Order
         interfaces = (relay.Node,)
         fields = '__all__'
         filter_fields = {
@@ -910,11 +922,11 @@ class OrderNode(DjangoObjectType, IsAuthenticatedMixin):
 
 class OrderItemNode(DjangoObjectType):
     """Order item node with product details"""
-    product = Field('ProductNode')
-    material = Field('MaterialNode')
+    product = Field(lambda: ProductType)
+    material = Field(lambda: MaterialType)
     
     class Meta:
-        model = models.OrderItem
+        model = OrderItem
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -922,7 +934,7 @@ class OrderItemNode(DjangoObjectType):
 class OrderTimelineNode(DjangoObjectType):
     """Order timeline node for tracking"""
     class Meta:
-        model = models.OrderTimeline
+        model = OrderTimeline
         interfaces = (relay.Node,)
         fields = '__all__'
 
@@ -930,7 +942,7 @@ class OrderTimelineNode(DjangoObjectType):
 class PaymentNode(DjangoObjectType):
     """Payment node with enhanced filtering"""
     class Meta:
-        model = models.Payment
+        model = Payment
         interfaces = (relay.Node,)
         fields = '__all__'
         filter_fields = {

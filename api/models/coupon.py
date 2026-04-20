@@ -11,6 +11,9 @@ This module provides comprehensive coupon management with:
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator, DecimalValidator
+from django.core.exceptions import ValidationError
+from decimal import Decimal
 import uuid
 import secrets
 
@@ -81,7 +84,12 @@ class Coupon(models.Model):
         max_digits=10,
         decimal_places=2,
         verbose_name=_('Discount Value'),
-        help_text=_('Discount value (percentage or amount)')
+        help_text=_('Discount value (percentage or amount)'),
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            MaxValueValidator(Decimal('100.00')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ]
     )
     max_discount = models.DecimalField(
         max_digits=10,
@@ -89,7 +97,11 @@ class Coupon(models.Model):
         blank=True,
         null=True,
         verbose_name=_('Maximum Discount'),
-        help_text=_('Maximum discount amount (for percentage only)')
+        help_text=_('Maximum discount amount (for percentage only)'),
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ]
     )
     
     # Usage Limits
@@ -117,7 +129,11 @@ class Coupon(models.Model):
         decimal_places=2,
         default=0,
         verbose_name=_('Minimum Order Value'),
-        help_text=_('Minimum order value to activate coupon')
+        help_text=_('Minimum order value to activate coupon'),
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ]
     )
     max_order_value = models.DecimalField(
         max_digits=10,
@@ -125,7 +141,11 @@ class Coupon(models.Model):
         blank=True,
         null=True,
         verbose_name=_('Maximum Order Value'),
-        help_text=_('Maximum order value to apply coupon')
+        help_text=_('Maximum order value to apply coupon'),
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ]
     )
     
     # Date Constraints
@@ -186,8 +206,8 @@ class Coupon(models.Model):
     
     class Meta:
         db_table = 'api_coupon'
-        verbose_name = _('كوبون')
-        verbose_name_plural = _('كوبونات')
+        verbose_name = _('Coupon')
+        verbose_name_plural = _('Coupons')
         indexes = [
             models.Index(fields=['code'], name='coupon_code_idx'),
             models.Index(fields=['is_active'], name='coupon_active_idx'),
@@ -197,33 +217,6 @@ class Coupon(models.Model):
     
     def __str__(self):
         return f"{self.code} - {self.name or 'Untitled'}"
-    
-    def clean(self):
-        """Validate coupon data"""
-        super().clean()
-        
-        # Validate discount value
-        if self.discount_type == 'percentage' and (self.discount_value <= 0 or self.discount_value > 100):
-            raise ValidationError({
-                'discount_value': _('نسبة الخصم يجب أن تكون بين 0 و 100')
-            })
-        
-        if self.discount_type == 'fixed' and self.discount_value <= 0:
-            raise ValidationError({
-                'discount_value': _('مبلغ الخصم يجب أن يكون أكبر من 0')
-            })
-        
-        # Validate dates
-        if self.valid_from and self.valid_to and self.valid_from >= self.valid_to:
-            raise ValidationError({
-                'valid_to': _('تاريخ النهاية يجب أن يكون بعد تاريخ البداية')
-            })
-        
-        # Validate max discount for percentage
-        if self.discount_type == 'percentage' and self.max_discount and self.max_discount <= 0:
-            raise ValidationError({
-                'max_discount': _('أقصى خصم يجب أن يكون أكبر من 0')
-            })
     
     def save(self, *args, **kwargs):
         """Override save to ensure code is uppercase"""
@@ -348,7 +341,11 @@ class CouponUsage(models.Model):
     discount_amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        verbose_name=_('مبلغ الخصم')
+        verbose_name=_('مبلغ الخصم'),
+        validators=[
+            MinValueValidator(Decimal('0.01')),
+            DecimalValidator(max_digits=10, decimal_places=2)
+        ]
     )
     used_at = models.DateTimeField(
         auto_now_add=True,
@@ -357,8 +354,8 @@ class CouponUsage(models.Model):
     
     class Meta:
         db_table = 'api_coupon_usage'
-        verbose_name = _('استخدام كوبون')
-        verbose_name_plural = _('استخدامات الكوبونات')
+        verbose_name = _('Coupon Usage')
+        verbose_name_plural = _('Coupon Usages')
         unique_together = ['coupon', 'user', 'order']
         indexes = [
             models.Index(fields=['coupon', 'user'], name='coupon_usage_user_idx'),
