@@ -5,7 +5,6 @@ import jwt
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from graphql.execution.executors.asyncio import AsyncioExecutor
 from graphql.error import GraphQLError
 from graphene_django.views import GraphQLView
 import logging
@@ -246,7 +245,7 @@ def generate_jwt_token(user):
     import datetime
     
     payload = {
-        'user_id': user.id,
+        'user_id': str(user.id),  # Convert UUID to string
         'username': user.username,
         'email': user.email,
         'is_staff': user.is_staff,

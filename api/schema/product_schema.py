@@ -52,14 +52,23 @@ class CategoryType(DjangoObjectType):
 
     def resolve_children(self, info):
         """Get direct children categories"""
+        # Use prefetch if available, otherwise query with select_related
+        if hasattr(self, '_prefetched_objects_cache') and 'children' in self._prefetched_objects_cache:
+            return [child for child in self._prefetched_objects_cache['children'] if child.is_active]
         return self.children.filter(is_active=True)
 
     def resolve_children_count(self, info):
         """Count direct children"""
+        # Use prefetched children if available to avoid count query
+        if hasattr(self, '_prefetched_objects_cache') and 'children' in self._prefetched_objects_cache:
+            return sum(1 for child in self._prefetched_objects_cache['children'] if child.is_active)
         return self.children.filter(is_active=True).count()
 
     def resolve_product_count(self, info):
         """Count products in this category"""
+        # Use prefetched products if available to avoid count query
+        if hasattr(self, '_prefetched_objects_cache') and 'products' in self._prefetched_objects_cache:
+            return sum(1 for product in self._prefetched_objects_cache['products'] if product.is_active)
         return self.products.filter(is_active=True).count()
 
 
@@ -273,7 +282,8 @@ class ProductType(DjangoObjectType):
         ).prefetch_related(
             'images',
             'variants',
-            'product_materials__material'
+            'product_materials__material',
+            'product_materials__material__supplier'
         ).only(
             'id', 'name_ar', 'name_en', 'slug', 'description_ar', 'description_en',
             'base_price', 'cost', 'compare_at_price', 'on_sale', 'discount_percent',
@@ -301,7 +311,14 @@ class ProductType(DjangoObjectType):
 
     def resolve_main_image(self, info):
         """Get main product image"""
-        for image in self.images.all():
+        # Use prefetched images to avoid additional database query
+        if hasattr(self, '_prefetched_objects_cache') and 'images' in self._prefetched_objects_cache:
+            images = self._prefetched_objects_cache['images']
+        else:
+            # Fallback to direct query if not prefetched
+            images = self.images.all()
+        
+        for image in images:
             if image.is_main:
                 return image.image_url
         return None
@@ -325,7 +342,14 @@ class ProductType(DjangoObjectType):
     def resolve_total_material_cost(self, info):
         """Calculate total material cost for this product"""
         total_cost = 0
-        for pm in self.product_materials.all():
+        # Use prefetched product_materials to avoid additional database query
+        if hasattr(self, '_prefetched_objects_cache') and 'product_materials' in self._prefetched_objects_cache:
+            product_materials = self._prefetched_objects_cache['product_materials']
+        else:
+            # Fallback to direct query if not prefetched
+            product_materials = self.product_materials.select_related('material').all()
+        
+        for pm in product_materials:
             if pm.is_active:
                 # Convert units to base unit for calculation
                 base_quantity = self.convert_to_base_unit(pm.quantity_used, pm.unit)
@@ -996,7 +1020,8 @@ class CategoryNode(DjangoObjectType):
     
     def resolve_children(self, info):
         """Get direct children of this category"""
-        return Category.objects.filter(parent=self, is_active=True)
+        # Use select_related to optimize the query
+        return Category.objects.filter(parent=self, is_active=True).select_related('parent')
     
     def resolve_level(self, info):
         """Calculate level of this category in tree"""

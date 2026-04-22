@@ -4,6 +4,7 @@ Updated to include payment methods with multilingual support and account details
 """
 
 import graphene
+from graphene import relay
 from graphene_django import DjangoObjectType
 from graphene_django.converter import convert_django_field_with_choices
 from django.contrib.auth import get_user_model
@@ -12,6 +13,46 @@ from ..models.payment_method import PaymentMethod
 
 
 User = get_user_model()
+
+
+class PaymentMethodType(DjangoObjectType):
+    """Simplified PaymentMethod type for frontend consumption"""
+    id = graphene.ID(required=True)
+    name = graphene.String()
+    type = graphene.String()
+    isActive = graphene.Boolean()
+    config = graphene.JSONString()
+    icon = graphene.String()
+    
+    class Meta:
+        model = PaymentMethod
+        interfaces = (relay.Node,)
+        fields = ['id', 'name_ar', 'name_en', 'payment_type', 'is_active', 'icon']
+        filter_fields = {
+            'payment_type': ['exact'],
+            'is_active': ['exact'],
+        }
+    
+    def resolve_name(self, info):
+        """Return name based on language preference"""
+        language = info.context.headers.get('Accept-Language', 'ar').split(',')[0].split('-')[0]
+        return self.get_name(language)
+    
+    def resolve_type(self, info):
+        """Return payment_type as type field"""
+        return self.payment_type
+    
+    def resolve_isActive(self, info):
+        """Return is_active as isActive field"""
+        return self.is_active
+    
+    def resolve_config(self, info):
+        """Return basic config information"""
+        return {
+            'fee_percentage': float(self.fee_percentage) if self.fee_percentage else 0,
+            'fee_fixed': float(self.fee_fixed) if self.fee_fixed else 0,
+            'max_amount': float(self.max_amount) if self.max_amount else None,
+        }
 
 
 class UserObjectType(DjangoObjectType):
@@ -99,12 +140,22 @@ class PaymentMethodQuery(graphene.ObjectType):
     """
     GraphQL queries for Payment Methods
     """
-    payment_methods = graphene.List(PaymentMethodObjectType)
-    active_payment_methods = graphene.List(PaymentMethodObjectType)
-    payment_method = graphene.Field(PaymentMethodObjectType, id=graphene.ID())
-    default_payment_method = graphene.Field(PaymentMethodObjectType)
+    # Simplified query for frontend
+    payment_methods = graphene.List(PaymentMethodType)
+    
+    # Existing queries for admin (camelCase for GraphQL convention)
+    paymentMethods = graphene.List(PaymentMethodObjectType)
+    activePaymentMethods = graphene.List(PaymentMethodObjectType)
+    paymentMethod = graphene.Field(PaymentMethodObjectType, id=graphene.ID())
+    defaultPaymentMethod = graphene.Field(PaymentMethodObjectType)
     
     def resolve_payment_methods(self, info):
+        """
+        Get active payment methods for frontend (public access)
+        """
+        return PaymentMethod.objects.filter(is_active=True).order_by('order_index', 'name_ar')
+    
+    def resolve_paymentMethods(self, info):
         """
         Get all payment methods (for admin)
         """
@@ -117,13 +168,13 @@ class PaymentMethodQuery(graphene.ObjectType):
         
         return PaymentMethod.objects.get_all_methods()
     
-    def resolve_active_payment_methods(self, info):
+    def resolve_activePaymentMethods(self, info):
         """
-        Get only active payment methods (for customers)
+        Get only active payment methods for customers
         """
         return PaymentMethod.objects.get_active_methods()
     
-    def resolve_payment_method(self, info, id):
+    def resolve_paymentMethod(self, info, id):
         """
         Get specific payment method by ID
         """
@@ -139,7 +190,7 @@ class PaymentMethodQuery(graphene.ObjectType):
         except PaymentMethod.DoesNotExist:
             raise Exception('Payment method not found')
     
-    def resolve_default_payment_method(self, info):
+    def resolve_defaultPaymentMethod(self, info):
         """
         Get default payment method
         """

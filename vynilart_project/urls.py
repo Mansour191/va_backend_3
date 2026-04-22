@@ -9,7 +9,6 @@ from core.schema import schema
 # إنشاء view مخصص لتجاوز إعدادات MIDDLEWARE
 class SafeGraphQLView(GraphQLView):
     def __init__(self, **kwargs):
-        kwargs['middleware'] = []  #强制 استخدام空 middleware
         super().__init__(**kwargs)
 
 urlpatterns = [

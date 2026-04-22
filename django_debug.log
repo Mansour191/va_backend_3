@@ -1,0 +1,891 @@
+INFO 2026-04-21 01:58:34,642 autoreload 17007 124584718069888 Watching for file changes with StatReloader
+INFO 2026-04-21 01:58:34,642 autoreload 17007 124584718069888 Watching for file changes with StatReloader
+DEBUG (0.009) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.004) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 01:58:41,309 log 17007 124584596600512 "HEAD /graphql/ HTTP/1.1" 302 0
+INFO 2026-04-21 01:58:41,309 log 17007 124584596600512 "HEAD /graphql/ HTTP/1.1" 302 0
+WARNING 2026-04-21 01:58:43,319 log 17007 124584596600512 "HEAD /api/graphql/ HTTP/1.1" 405 0
+WARNING 2026-04-21 01:58:43,319 log 17007 124584596600512 "HEAD /api/graphql/ HTTP/1.1" 405 0
+INFO 2026-04-21 01:58:45,729 log 17007 124584596600512 "POST /api/graphql/ HTTP/1.1" 200 31
+INFO 2026-04-21 01:58:45,729 log 17007 124584596600512 "POST /api/graphql/ HTTP/1.1" 200 31
+INFO 2026-04-21 01:58:47,700 log 17007 124584596600512 "POST /api/graphql/ HTTP/1.1" 200 31
+INFO 2026-04-21 01:58:47,700 log 17007 124584596600512 "POST /api/graphql/ HTTP/1.1" 200 31
+INFO 2026-04-21 02:00:05,765 autoreload 17311 137768781205632 Watching for file changes with StatReloader
+INFO 2026-04-21 02:00:05,765 autoreload 17311 137768781205632 Watching for file changes with StatReloader
+DEBUG (0.007) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:00:17,259 log 17311 137768592209600 "GET / HTTP/1.1" 200 150
+INFO 2026-04-21 02:00:17,259 log 17311 137768592209600 "GET / HTTP/1.1" 200 150
+WARNING 2026-04-21 02:00:18,331 log 17311 137768592209600 "GET /favicon.ico HTTP/1.1" 404 3475
+WARNING 2026-04-21 02:00:18,331 log 17311 137768592209600 "GET /favicon.ico HTTP/1.1" 404 3475
+INFO 2026-04-21 02:00:24,589 log 17311 137768592209600 "GET /api/graphql/ HTTP/1.1" 200 2611
+INFO 2026-04-21 02:00:24,589 log 17311 137768592209600 "GET /api/graphql/ HTTP/1.1" 200 2611
+INFO 2026-04-21 02:00:24,782 log 17311 137768592209600 "GET /static/graphene_django/graphiql.js HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:24,782 log 17311 137768592209600 "GET /static/graphene_django/graphiql.js HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:25,612 log 17311 137768592209600 "POST /api/graphql/ HTTP/1.1" 200 537602
+INFO 2026-04-21 02:00:25,612 log 17311 137768592209600 "POST /api/graphql/ HTTP/1.1" 200 537602
+INFO 2026-04-21 02:00:28,232 log 17311 137768592209600 "POST /api/graphql/ HTTP/1.1" 200 3137
+INFO 2026-04-21 02:00:28,232 log 17311 137768592209600 "POST /api/graphql/ HTTP/1.1" 200 3137
+DEBUG (0.017) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2026-04-21T02:00:38.150838+00:00'::timestamptz AND "django_session"."session_key" = '3jhvam9z3ymistjk88ji6p4v8zxaa32b') LIMIT 21; args=(datetime.datetime(2026, 4, 21, 2, 0, 38, 150838, tzinfo=datetime.timezone.utc), '3jhvam9z3ymistjk88ji6p4v8zxaa32b'); alias=default
+WARNING 2026-04-21 02:00:38,208 base 17311 137768592209600 Session data corrupted
+WARNING 2026-04-21 02:00:38,208 base 17311 137768592209600 Session data corrupted
+INFO 2026-04-21 02:00:38,346 log 17311 137768592209600 "GET /admin/ HTTP/1.1" 302 0
+INFO 2026-04-21 02:00:38,346 log 17311 137768592209600 "GET /admin/ HTTP/1.1" 302 0
+DEBUG (0.001) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2026-04-21T02:00:38.358219+00:00'::timestamptz AND "django_session"."session_key" = '3jhvam9z3ymistjk88ji6p4v8zxaa32b') LIMIT 21; args=(datetime.datetime(2026, 4, 21, 2, 0, 38, 358219, tzinfo=datetime.timezone.utc), '3jhvam9z3ymistjk88ji6p4v8zxaa32b'); alias=default
+WARNING 2026-04-21 02:00:38,360 base 17311 137768592209600 Session data corrupted
+WARNING 2026-04-21 02:00:38,360 base 17311 137768592209600 Session data corrupted
+INFO 2026-04-21 02:00:38,413 log 17311 137768592209600 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4147
+INFO 2026-04-21 02:00:38,413 log 17311 137768592209600 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4147
+INFO 2026-04-21 02:00:38,532 log 17311 137768592209600 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,532 log 17311 137768592209600 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,534 log 17311 137768592209600 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,534 log 17311 137768592209600 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,547 log 17311 137768554444480 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,547 log 17311 137768562837184 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,547 log 17311 137768562837184 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,549 log 17311 137768571229888 "GET /static/admin/css/login.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,549 log 17311 137768579622592 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,549 log 17311 137768579622592 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,547 log 17311 137768554444480 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,549 log 17311 137768571229888 "GET /static/admin/css/login.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,573 log 17311 137768571229888 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:38,573 log 17311 137768571229888 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+DEBUG (0.002) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2026-04-21T02:00:40.818021+00:00'::timestamptz AND "django_session"."session_key" = '3jhvam9z3ymistjk88ji6p4v8zxaa32b') LIMIT 21; args=(datetime.datetime(2026, 4, 21, 2, 0, 40, 818021, tzinfo=datetime.timezone.utc), '3jhvam9z3ymistjk88ji6p4v8zxaa32b'); alias=default
+WARNING 2026-04-21 02:00:40,860 base 17311 137768571229888 Session data corrupted
+WARNING 2026-04-21 02:00:40,860 base 17311 137768571229888 Session data corrupted
+DEBUG (0.002) SELECT "api_user"."password", "api_user"."last_login", "api_user"."is_superuser", "api_user"."username", "api_user"."first_name", "api_user"."last_name", "api_user"."is_staff", "api_user"."is_active", "api_user"."date_joined", "api_user"."id", "api_user"."email", "api_user"."phone", "api_user"."is_verified", "api_user"."verification_token", "api_user"."created_at", "api_user"."updated_at" FROM "api_user" WHERE "api_user"."email" = 'mansour191@example.com' LIMIT 21; args=('mansour191@example.com',); alias=default
+DEBUG (0.001) SELECT 1 AS "a" FROM "django_session" WHERE "django_session"."session_key" = '2d90l772sjl52wuwdp2vgjcxnkg4kxsa' LIMIT 1; args=(1, '2d90l772sjl52wuwdp2vgjcxnkg4kxsa'); alias=default
+DEBUG (0.000) BEGIN; args=None; alias=default
+DEBUG (0.002) INSERT INTO "django_session" ("session_key", "session_data", "expire_date") VALUES ('2d90l772sjl52wuwdp2vgjcxnkg4kxsa', 'e30:1wF0Pq:QLwLrtHbYhViBMLGA3YPKEmVsoVMOyhNeRO1ZyNqRNs', '2026-05-05T02:00:42.906806+00:00'::timestamptz); args=('2d90l772sjl52wuwdp2vgjcxnkg4kxsa', 'e30:1wF0Pq:QLwLrtHbYhViBMLGA3YPKEmVsoVMOyhNeRO1ZyNqRNs', datetime.datetime(2026, 5, 5, 2, 0, 42, 906806, tzinfo=datetime.timezone.utc)); alias=default
+DEBUG (0.010) COMMIT; args=None; alias=default
+DEBUG (0.001) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE "django_session"."session_key" = '3jhvam9z3ymistjk88ji6p4v8zxaa32b' LIMIT 21; args=('3jhvam9z3ymistjk88ji6p4v8zxaa32b',); alias=default
+DEBUG (0.009) DELETE FROM "django_session" WHERE "django_session"."session_key" IN ('3jhvam9z3ymistjk88ji6p4v8zxaa32b'); args=('3jhvam9z3ymistjk88ji6p4v8zxaa32b',); alias=default
+DEBUG (0.013) UPDATE "api_user" SET "last_login" = '2026-04-21T02:00:42.932536+00:00'::timestamptz WHERE "api_user"."id" = '758d2d5b-ea1e-41f2-879b-fd6fb8676c9e'::uuid; args=(datetime.datetime(2026, 4, 21, 2, 0, 42, 932536, tzinfo=datetime.timezone.utc), UUID('758d2d5b-ea1e-41f2-879b-fd6fb8676c9e')); alias=default
+DEBUG (0.000) BEGIN; args=None; alias=default
+DEBUG (0.001) UPDATE "django_session" SET "session_data" = '.eJxVjksOwjAMRO-SNY3S1E0cluw5Q2XHDi2gVupnhbg7VOoC1vPezLxMR9vad9uiczeIOZvYonhpuVKqtYK6-Apj4qpIKIwhhpzUnH41pvzQcXflTuNtsnka13lguyP2SBd7nUSfl4P9K-hp6fflUFNIDiNCAcSGIaNLmoBIqHhh5xrJTSH83lPOTOQ1qecC7ACieX8AR1xCfA:1wF0Pq:J7Rtfhw2vVELGWzX6sbP1zzmR_9g3IMxxHwfhot6HSM', "expire_date" = '2026-05-05T02:00:42.950848+00:00'::timestamptz WHERE "django_session"."session_key" = '2d90l772sjl52wuwdp2vgjcxnkg4kxsa'; args=('.eJxVjksOwjAMRO-SNY3S1E0cluw5Q2XHDi2gVupnhbg7VOoC1vPezLxMR9vad9uiczeIOZvYonhpuVKqtYK6-Apj4qpIKIwhhpzUnH41pvzQcXflTuNtsnka13lguyP2SBd7nUSfl4P9K-hp6fflUFNIDiNCAcSGIaNLmoBIqHhh5xrJTSH83lPOTOQ1qecC7ACieX8AR1xCfA:1wF0Pq:J7Rtfhw2vVELGWzX6sbP1zzmR_9g3IMxxHwfhot6HSM', datetime.datetime(2026, 5, 5, 2, 0, 42, 950848, tzinfo=datetime.timezone.utc), '2d90l772sjl52wuwdp2vgjcxnkg4kxsa'); alias=default
+DEBUG (0.004) COMMIT; args=None; alias=default
+INFO 2026-04-21 02:00:42,961 log 17311 137768571229888 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2026-04-21 02:00:42,961 log 17311 137768571229888 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+DEBUG (0.001) SELECT "django_session"."session_key", "django_session"."session_data", "django_session"."expire_date" FROM "django_session" WHERE ("django_session"."expire_date" > '2026-04-21T02:00:42.972875+00:00'::timestamptz AND "django_session"."session_key" = '2d90l772sjl52wuwdp2vgjcxnkg4kxsa') LIMIT 21; args=(datetime.datetime(2026, 4, 21, 2, 0, 42, 972875, tzinfo=datetime.timezone.utc), '2d90l772sjl52wuwdp2vgjcxnkg4kxsa'); alias=default
+DEBUG (0.001) SELECT "api_user"."password", "api_user"."last_login", "api_user"."is_superuser", "api_user"."username", "api_user"."first_name", "api_user"."last_name", "api_user"."is_staff", "api_user"."is_active", "api_user"."date_joined", "api_user"."id", "api_user"."email", "api_user"."phone", "api_user"."is_verified", "api_user"."verification_token", "api_user"."created_at", "api_user"."updated_at" FROM "api_user" WHERE "api_user"."id" = '758d2d5b-ea1e-41f2-879b-fd6fb8676c9e'::uuid LIMIT 21; args=(UUID('758d2d5b-ea1e-41f2-879b-fd6fb8676c9e'),); alias=default
+DEBUG (0.010) SELECT "django_admin_log"."id", "django_admin_log"."action_time", "django_admin_log"."user_id", "django_admin_log"."content_type_id", "django_admin_log"."object_id", "django_admin_log"."object_repr", "django_admin_log"."action_flag", "django_admin_log"."change_message", "api_user"."password", "api_user"."last_login", "api_user"."is_superuser", "api_user"."username", "api_user"."first_name", "api_user"."last_name", "api_user"."is_staff", "api_user"."is_active", "api_user"."date_joined", "api_user"."id", "api_user"."email", "api_user"."phone", "api_user"."is_verified", "api_user"."verification_token", "api_user"."created_at", "api_user"."updated_at", "django_content_type"."id", "django_content_type"."app_label", "django_content_type"."model" FROM "django_admin_log" INNER JOIN "api_user" ON ("django_admin_log"."user_id" = "api_user"."id") LEFT OUTER JOIN "django_content_type" ON ("django_admin_log"."content_type_id" = "django_content_type"."id") WHERE "django_admin_log"."user_id" = '758d2d5b-ea1e-41f2-879b-fd6fb8676c9e'::uuid ORDER BY "django_admin_log"."action_time" DESC LIMIT 10; args=(UUID('758d2d5b-ea1e-41f2-879b-fd6fb8676c9e'),); alias=default
+INFO 2026-04-21 02:00:43,061 log 17311 137768571229888 "GET /admin/ HTTP/1.1" 200 33122
+INFO 2026-04-21 02:00:43,061 log 17311 137768571229888 "GET /admin/ HTTP/1.1" 200 33122
+INFO 2026-04-21 02:00:43,130 log 17311 137768571229888 "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:43,130 log 17311 137768571229888 "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:43,153 log 17311 137768571229888 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:43,153 log 17311 137768571229888 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:43,155 log 17311 137768592209600 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2026-04-21 02:00:43,155 log 17311 137768592209600 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2026-04-21 02:01:35,789 autoreload 17511 125778065969280 Watching for file changes with StatReloader
+INFO 2026-04-21 02:01:35,789 autoreload 17511 125778065969280 Watching for file changes with StatReloader
+DEBUG (0.015) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.003) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:02:15,753 log 17511 125777944245952 "POST /api/graphql/ HTTP/1.1" 200 7473
+INFO 2026-04-21 02:02:15,753 log 17511 125777944245952 "POST /api/graphql/ HTTP/1.1" 200 7473
+INFO 2026-04-21 02:17:08,035 autoreload 17511 125778065969280 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:17:08,035 autoreload 17511 125778065969280 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:17:10,633 autoreload 17973 129289220890752 Watching for file changes with StatReloader
+INFO 2026-04-21 02:17:10,633 autoreload 17973 129289220890752 Watching for file changes with StatReloader
+DEBUG (0.011) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.003) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:17:21,742 autoreload 17973 129289220890752 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:17:21,742 autoreload 17973 129289220890752 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:17:25,954 autoreload 18029 124010529656960 Watching for file changes with StatReloader
+INFO 2026-04-21 02:17:25,954 autoreload 18029 124010529656960 Watching for file changes with StatReloader
+DEBUG (0.014) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:17:33,367 autoreload 18029 124010529656960 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:17:33,367 autoreload 18029 124010529656960 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:17:37,180 autoreload 18095 126684910145664 Watching for file changes with StatReloader
+INFO 2026-04-21 02:17:37,180 autoreload 18095 126684910145664 Watching for file changes with StatReloader
+DEBUG (0.014) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:17:48,106 autoreload 18095 126684910145664 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:17:48,106 autoreload 18095 126684910145664 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:17:50,272 autoreload 18146 137893247496320 Watching for file changes with StatReloader
+INFO 2026-04-21 02:17:50,272 autoreload 18146 137893247496320 Watching for file changes with StatReloader
+INFO 2026-04-21 02:17:55,167 autoreload 18146 137893247496320 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:17:55,167 autoreload 18146 137893247496320 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:17:57,591 autoreload 18193 128142286233728 Watching for file changes with StatReloader
+INFO 2026-04-21 02:17:57,591 autoreload 18193 128142286233728 Watching for file changes with StatReloader
+INFO 2026-04-21 02:18:01,902 autoreload 18193 128142286233728 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:18:01,902 autoreload 18193 128142286233728 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:18:05,475 autoreload 18227 136571956854912 Watching for file changes with StatReloader
+INFO 2026-04-21 02:18:05,475 autoreload 18227 136571956854912 Watching for file changes with StatReloader
+INFO 2026-04-21 02:18:17,228 autoreload 18227 136571956854912 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:18:17,228 autoreload 18227 136571956854912 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:18:21,202 autoreload 18275 133171435413632 Watching for file changes with StatReloader
+INFO 2026-04-21 02:18:21,202 autoreload 18275 133171435413632 Watching for file changes with StatReloader
+DEBUG (0.009) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.007) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.007) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:19:28,743 log 18482 137835933857472 "GET / HTTP/1.1" 200 150
+INFO 2026-04-21 02:19:28,743 log 18482 137835933857472 "GET / HTTP/1.1" 200 150
+WARNING 2026-04-21 02:19:30,051 log 18482 137835933857472 "GET /favicon.ico HTTP/1.1" 404 3475
+WARNING 2026-04-21 02:19:30,051 log 18482 137835933857472 "GET /favicon.ico HTTP/1.1" 404 3475
+ERROR 2026-04-21 02:19:31,913 log 18482 137835925464768 Internal Server Error: /graphql
+Traceback (most recent call last):
+  File "/home/mansour/Desktop/vynilart_3/va_backend_3/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mansour/Desktop/vynilart_3/va_backend_3/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 311, in __call__
+    response = self.process_response(request, response)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mansour/Desktop/vynilart_3/va_backend_3/venv/lib/python3.12/site-packages/django/middleware/common.py", line 109, in process_response
+    self.get_full_path_with_slash(request)
+  File "/home/mansour/Desktop/vynilart_3/va_backend_3/venv/lib/python3.12/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to localhost:8001/graphql/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+ERROR 2026-04-21 02:19:31,921 log 18482 137835925464768 "POST /graphql HTTP/1.1" 500 77315
+ERROR 2026-04-21 02:19:31,921 log 18482 137835925464768 "POST /graphql HTTP/1.1" 500 77315
+DEBUG (0.016) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE "api_shipping"."is_active" ORDER BY "api_shipping"."wilaya_id" ASC; args=(); alias=default
+INFO 2026-04-21 02:19:39,806 log 18482 137835925464768 "POST /api/graphql/ HTTP/1.1" 200 23
+INFO 2026-04-21 02:19:39,806 log 18482 137835925464768 "POST /api/graphql/ HTTP/1.1" 200 23
+WARNING 2026-04-21 02:19:44,569 log 18482 137835925464768 "POST /api/graphql/ HTTP/1.1" 400 212
+WARNING 2026-04-21 02:19:44,569 log 18482 137835925464768 "POST /api/graphql/ HTTP/1.1" 400 212
+INFO 2026-04-21 02:19:50,158 autoreload 18275 133171435413632 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:19:50,158 autoreload 18275 133171435413632 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:19:52,732 autoreload 18916 134261573775488 Watching for file changes with StatReloader
+INFO 2026-04-21 02:19:52,732 autoreload 18916 134261573775488 Watching for file changes with StatReloader
+INFO 2026-04-21 02:19:53,142 log 18482 137835933857472 "GET /graphql HTTP/1.1" 301 0
+INFO 2026-04-21 02:19:53,142 log 18482 137835933857472 "GET /graphql HTTP/1.1" 301 0
+INFO 2026-04-21 02:19:53,159 log 18482 137835933857472 "GET /graphql/ HTTP/1.1" 302 0
+INFO 2026-04-21 02:19:53,159 log 18482 137835933857472 "GET /graphql/ HTTP/1.1" 302 0
+INFO 2026-04-21 02:19:53,276 log 18482 137835933857472 "GET /api/graphql/ HTTP/1.1" 200 2611
+INFO 2026-04-21 02:19:53,276 log 18482 137835933857472 "GET /api/graphql/ HTTP/1.1" 200 2611
+INFO 2026-04-21 02:19:53,681 log 18482 137835933857472 "GET /static/graphene_django/graphiql.js HTTP/1.1" 200 4037
+INFO 2026-04-21 02:19:53,681 log 18482 137835933857472 "GET /static/graphene_django/graphiql.js HTTP/1.1" 200 4037
+DEBUG (0.101) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:19:58,288 log 18482 137835933857472 "POST /api/graphql/ HTTP/1.1" 200 541850
+INFO 2026-04-21 02:19:58,288 log 18482 137835933857472 "POST /api/graphql/ HTTP/1.1" 200 541850
+INFO 2026-04-21 02:20:07,961 autoreload 18916 134261573775488 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:20:07,961 autoreload 18916 134261573775488 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/payment_method_schema.py changed, reloading.
+INFO 2026-04-21 02:20:12,057 autoreload 19028 133492310171776 Watching for file changes with StatReloader
+INFO 2026-04-21 02:20:12,057 autoreload 19028 133492310171776 Watching for file changes with StatReloader
+DEBUG (0.010) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.010) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+WARNING 2026-04-21 02:20:15,088 log 18482 137835925464768 "POST /api/graphql/ HTTP/1.1" 400 212
+WARNING 2026-04-21 02:20:15,088 log 18482 137835925464768 "POST /api/graphql/ HTTP/1.1" 400 212
+DEBUG (0.008) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.002) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE "api_shipping"."is_active" ORDER BY "api_shipping"."wilaya_id" ASC; args=(); alias=default
+INFO 2026-04-21 02:20:42,996 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 23
+INFO 2026-04-21 02:20:42,996 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 23
+WARNING 2026-04-21 02:20:47,119 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 400 191
+WARNING 2026-04-21 02:20:47,119 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 400 191
+INFO 2026-04-21 02:20:52,255 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 3156
+INFO 2026-04-21 02:20:52,255 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 3156
+INFO 2026-04-21 02:20:59,169 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 3156
+INFO 2026-04-21 02:20:59,169 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 3156
+WARNING 2026-04-21 02:21:04,683 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 400 160
+WARNING 2026-04-21 02:21:04,683 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 400 160
+INFO 2026-04-21 02:21:09,261 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 143
+INFO 2026-04-21 02:21:09,261 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 143
+INFO 2026-04-21 02:21:13,467 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 143
+INFO 2026-04-21 02:21:13,467 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 143
+DEBUG (0.013) SELECT "api_payment_method"."id", "api_payment_method"."name_ar", "api_payment_method"."name_en", "api_payment_method"."payment_type", "api_payment_method"."gateway_provider", "api_payment_method"."account_name", "api_payment_method"."account_number", "api_payment_method"."iban", "api_payment_method"."instructions_ar", "api_payment_method"."instructions_en", "api_payment_method"."icon", "api_payment_method"."logo", "api_payment_method"."order_index", "api_payment_method"."is_active", "api_payment_method"."is_default", "api_payment_method"."max_amount", "api_payment_method"."fee_percentage", "api_payment_method"."fee_fixed", "api_payment_method"."created_by_id", "api_payment_method"."created_by_user_id", "api_payment_method"."created_at", "api_payment_method"."updated_at" FROM "api_payment_method" WHERE "api_payment_method"."is_active" ORDER BY "api_payment_method"."order_index" ASC, "api_payment_method"."name_ar" ASC; args=(); alias=default
+INFO 2026-04-21 02:21:18,833 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 388
+INFO 2026-04-21 02:21:18,833 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 388
+DEBUG (0.003) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE "api_shipping"."is_active" ORDER BY "api_shipping"."wilaya_id" ASC; args=(); alias=default
+INFO 2026-04-21 02:21:23,901 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 23
+INFO 2026-04-21 02:21:23,901 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 23
+DEBUG (0.002) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE "api_shipping"."is_active" ORDER BY "api_shipping"."wilaya_id" ASC; args=(); alias=default
+INFO 2026-04-21 02:21:28,870 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 23
+INFO 2026-04-21 02:21:28,870 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 23
+DEBUG (0.004) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" ORDER BY "api_shipping"."wilaya_id" ASC; args=(); alias=default
+INFO 2026-04-21 02:21:34,486 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 24
+INFO 2026-04-21 02:21:34,486 log 19175 137116534175424 "POST /api/graphql/ HTTP/1.1" 200 24
+DEBUG (0.011) SELECT COUNT(*) AS "__count" FROM "api_shipping"; args=(); alias=default
+DEBUG (0.001) SELECT COUNT(*) AS "__count" FROM "api_shipping" WHERE "api_shipping"."is_active"; args=(); alias=default
+DEBUG (0.002) SELECT COUNT(*) AS "__count" FROM "api_payment_method"; args=(); alias=default
+DEBUG (0.001) SELECT COUNT(*) AS "__count" FROM "api_payment_method" WHERE "api_payment_method"."is_active"; args=(); alias=default
+INFO 2026-04-21 02:22:29,642 autoreload 19028 133492310171776 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:22:29,642 autoreload 19028 133492310171776 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:22:33,161 autoreload 19891 137642082119808 Watching for file changes with StatReloader
+INFO 2026-04-21 02:22:33,161 autoreload 19891 137642082119808 Watching for file changes with StatReloader
+DEBUG (0.012) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:22:54,613 autoreload 19891 137642082119808 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:22:54,613 autoreload 19891 137642082119808 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:22:57,853 autoreload 19946 140711067062400 Watching for file changes with StatReloader
+INFO 2026-04-21 02:22:57,853 autoreload 19946 140711067062400 Watching for file changes with StatReloader
+DEBUG (0.010) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.003) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:23:08,561 autoreload 19946 140711067062400 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:23:08,561 autoreload 19946 140711067062400 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:23:11,578 autoreload 20022 138402635735168 Watching for file changes with StatReloader
+INFO 2026-04-21 02:23:11,578 autoreload 20022 138402635735168 Watching for file changes with StatReloader
+DEBUG (0.015) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.008) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.008) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+WARNING 2026-04-21 02:23:44,077 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 400 122
+WARNING 2026-04-21 02:23:44,077 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 400 122
+INFO 2026-04-21 02:23:49,963 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 200 2021
+INFO 2026-04-21 02:23:49,963 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 200 2021
+INFO 2026-04-21 02:23:57,777 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 200 2021
+INFO 2026-04-21 02:23:57,777 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 200 2021
+INFO 2026-04-21 02:24:06,281 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 200 2021
+INFO 2026-04-21 02:24:06,281 log 20112 140002214278848 "POST /api/graphql/ HTTP/1.1" 200 2021
+INFO 2026-04-21 02:24:20,336 autoreload 20022 138402635735168 /home/mansour/Desktop/vynilart_3/va_backend_3/core/schema.py changed, reloading.
+INFO 2026-04-21 02:24:20,336 autoreload 20022 138402635735168 /home/mansour/Desktop/vynilart_3/va_backend_3/core/schema.py changed, reloading.
+INFO 2026-04-21 02:24:23,262 autoreload 20436 125602688290944 Watching for file changes with StatReloader
+INFO 2026-04-21 02:24:23,262 autoreload 20436 125602688290944 Watching for file changes with StatReloader
+DEBUG (0.011) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.003) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:24:29,440 autoreload 20436 125602688290944 /home/mansour/Desktop/vynilart_3/va_backend_3/core/schema.py changed, reloading.
+INFO 2026-04-21 02:24:29,440 autoreload 20436 125602688290944 /home/mansour/Desktop/vynilart_3/va_backend_3/core/schema.py changed, reloading.
+INFO 2026-04-21 02:24:34,510 autoreload 20477 136778289295488 Watching for file changes with StatReloader
+INFO 2026-04-21 02:24:34,510 autoreload 20477 136778289295488 Watching for file changes with StatReloader
+DEBUG (0.010) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.009) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:26:00,805 log 20587 140082610697920 "POST /api/graphql/ HTTP/1.1" 200 2197
+INFO 2026-04-21 02:26:00,805 log 20587 140082610697920 "POST /api/graphql/ HTTP/1.1" 200 2197
+WARNING 2026-04-21 02:26:10,097 log 20587 140082610697920 "POST /api/graphql/ HTTP/1.1" 400 587
+WARNING 2026-04-21 02:26:10,097 log 20587 140082610697920 "POST /api/graphql/ HTTP/1.1" 400 587
+INFO 2026-04-21 02:26:18,030 autoreload 20477 136778289295488 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:26:18,030 autoreload 20477 136778289295488 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:26:21,343 autoreload 20834 128272017113216 Watching for file changes with StatReloader
+INFO 2026-04-21 02:26:21,343 autoreload 20834 128272017113216 Watching for file changes with StatReloader
+DEBUG (0.010) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:26:27,860 autoreload 20834 128272017113216 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:26:27,860 autoreload 20834 128272017113216 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:26:31,251 autoreload 20879 133688696017024 Watching for file changes with StatReloader
+INFO 2026-04-21 02:26:31,251 autoreload 20879 133688696017024 Watching for file changes with StatReloader
+DEBUG (0.014) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.003) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.011) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.002) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '16') LIMIT 21; args=('16',); alias=default
+INFO 2026-04-21 02:27:00,003 log 21004 134333226546880 "POST /api/graphql/ HTTP/1.1" 200 251
+INFO 2026-04-21 02:27:00,003 log 21004 134333226546880 "POST /api/graphql/ HTTP/1.1" 200 251
+DEBUG (0.084) INSERT INTO "api_shipping" ("wilaya_id", "name_ar", "name_fr", "stop_desk_price", "home_delivery_price", "is_active", "regions", "pickup_latitude", "pickup_longitude", "radius_km", "maps_url", "created_at", "updated_at") VALUES ('16', ' Alger', 'Alger', 500, 800, true, '[]'::jsonb, NULL, NULL, NULL, NULL, '2026-04-21T02:27:09.010030+00:00'::timestamptz, '2026-04-21T02:27:09.010064+00:00'::timestamptz) RETURNING "api_shipping"."id"; args=('16', ' Alger', 'Alger', Decimal('500'), Decimal('800'), True, <django.db.backends.postgresql.psycopg_any.Jsonb object at 0x78000ab65af0>, None, None, None, None, datetime.datetime(2026, 4, 21, 2, 27, 9, 10030, tzinfo=datetime.timezone.utc), datetime.datetime(2026, 4, 21, 2, 27, 9, 10064, tzinfo=datetime.timezone.utc)); alias=default
+DEBUG (0.002) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '16') LIMIT 21; args=('16',); alias=default
+DEBUG (0.019) SELECT "api_shippingprice"."id", "api_shippingprice"."wilaya_id", "api_shippingprice"."shipping_method_id", "api_shippingprice"."home_delivery_price", "api_shippingprice"."stop_desk_price", "api_shippingprice"."express_price", "api_shippingprice"."pickup_price", "api_shippingprice"."free_shipping_minimum", "api_shippingprice"."weight_surcharge", "api_shippingprice"."volume_surcharge", "api_shippingprice"."cod_available", "api_shippingprice"."cod_fee", "api_shippingprice"."insurance_available", "api_shippingprice"."insurance_rate", "api_shippingprice"."tracking_available", "api_shippingprice"."max_weight", "api_shippingprice"."max_value", "api_shippingprice"."is_active", "api_shippingprice"."valid_from", "api_shippingprice"."valid_to", "api_shippingprice"."created_at", "api_shippingprice"."updated_at", "api_shipping_method"."id", "api_shipping_method"."organization_id", "api_shipping_method"."name", "api_shipping_method"."provider_name", "api_shipping_method"."base_cost", "api_shipping_method"."estimated_days", "api_shipping_method"."is_active", "api_shipping_method"."description", "api_shipping_method"."created_at", "api_shipping_method"."updated_at" FROM "api_shippingprice" INNER JOIN "api_shipping_method" ON ("api_shippingprice"."shipping_method_id" = "api_shipping_method"."id") WHERE ("api_shippingprice"."is_active" AND "api_shippingprice"."wilaya_id" = 1); args=(1,); alias=default
+INFO 2026-04-21 02:27:17,606 log 21004 134333226546880 "POST /api/graphql/ HTTP/1.1" 200 339
+INFO 2026-04-21 02:27:17,606 log 21004 134333226546880 "POST /api/graphql/ HTTP/1.1" 200 339
+INFO 2026-04-21 02:27:25,053 autoreload 20879 133688696017024 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:27:25,053 autoreload 20879 133688696017024 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:27:30,416 autoreload 21297 135876418658432 Watching for file changes with StatReloader
+INFO 2026-04-21 02:27:30,416 autoreload 21297 135876418658432 Watching for file changes with StatReloader
+DEBUG (0.012) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:27:39,331 autoreload 21297 135876418658432 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:27:39,331 autoreload 21297 135876418658432 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:27:43,989 autoreload 21369 138818885079168 Watching for file changes with StatReloader
+INFO 2026-04-21 02:27:43,989 autoreload 21369 138818885079168 Watching for file changes with StatReloader
+DEBUG (0.007) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.004) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 02:27:51,040 autoreload 21369 138818885079168 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:27:51,040 autoreload 21369 138818885079168 /home/mansour/Desktop/vynilart_3/va_backend_3/api/schema/shipping_schema.py changed, reloading.
+INFO 2026-04-21 02:27:55,740 autoreload 21432 137730340921472 Watching for file changes with StatReloader
+INFO 2026-04-21 02:27:55,740 autoreload 21432 137730340921472 Watching for file changes with StatReloader
+DEBUG (0.013) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.005) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.008) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG (0.003) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '16') LIMIT 21; args=('16',); alias=default
+DEBUG (0.001) SELECT "api_shippingprice"."id", "api_shippingprice"."wilaya_id", "api_shippingprice"."shipping_method_id", "api_shippingprice"."home_delivery_price", "api_shippingprice"."stop_desk_price", "api_shippingprice"."express_price", "api_shippingprice"."pickup_price", "api_shippingprice"."free_shipping_minimum", "api_shippingprice"."weight_surcharge", "api_shippingprice"."volume_surcharge", "api_shippingprice"."cod_available", "api_shippingprice"."cod_fee", "api_shippingprice"."insurance_available", "api_shippingprice"."insurance_rate", "api_shippingprice"."tracking_available", "api_shippingprice"."max_weight", "api_shippingprice"."max_value", "api_shippingprice"."is_active", "api_shippingprice"."valid_from", "api_shippingprice"."valid_to", "api_shippingprice"."created_at", "api_shippingprice"."updated_at", "api_shipping_method"."id", "api_shipping_method"."organization_id", "api_shipping_method"."name", "api_shipping_method"."provider_name", "api_shipping_method"."base_cost", "api_shipping_method"."estimated_days", "api_shipping_method"."is_active", "api_shipping_method"."description", "api_shipping_method"."created_at", "api_shipping_method"."updated_at" FROM "api_shippingprice" INNER JOIN "api_shipping_method" ON ("api_shippingprice"."shipping_method_id" = "api_shipping_method"."id") WHERE ("api_shippingprice"."is_active" AND "api_shippingprice"."wilaya_id" = 1); args=(1,); alias=default
+INFO 2026-04-21 02:28:24,814 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 239
+INFO 2026-04-21 02:28:24,814 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 239
+DEBUG (0.003) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '16') LIMIT 21; args=('16',); alias=default
+DEBUG (0.001) SELECT "api_shippingprice"."id", "api_shippingprice"."wilaya_id", "api_shippingprice"."shipping_method_id", "api_shippingprice"."home_delivery_price", "api_shippingprice"."stop_desk_price", "api_shippingprice"."express_price", "api_shippingprice"."pickup_price", "api_shippingprice"."free_shipping_minimum", "api_shippingprice"."weight_surcharge", "api_shippingprice"."volume_surcharge", "api_shippingprice"."cod_available", "api_shippingprice"."cod_fee", "api_shippingprice"."insurance_available", "api_shippingprice"."insurance_rate", "api_shippingprice"."tracking_available", "api_shippingprice"."max_weight", "api_shippingprice"."max_value", "api_shippingprice"."is_active", "api_shippingprice"."valid_from", "api_shippingprice"."valid_to", "api_shippingprice"."created_at", "api_shippingprice"."updated_at", "api_shipping_method"."id", "api_shipping_method"."organization_id", "api_shipping_method"."name", "api_shipping_method"."provider_name", "api_shipping_method"."base_cost", "api_shipping_method"."estimated_days", "api_shipping_method"."is_active", "api_shipping_method"."description", "api_shipping_method"."created_at", "api_shipping_method"."updated_at" FROM "api_shippingprice" INNER JOIN "api_shipping_method" ON ("api_shippingprice"."shipping_method_id" = "api_shipping_method"."id") WHERE ("api_shippingprice"."is_active" AND "api_shippingprice"."wilaya_id" = 1); args=(1,); alias=default
+INFO 2026-04-21 02:28:37,958 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 245
+INFO 2026-04-21 02:28:37,958 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 245
+DEBUG (0.003) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '16') LIMIT 21; args=('16',); alias=default
+DEBUG (0.001) SELECT "api_shippingprice"."id", "api_shippingprice"."wilaya_id", "api_shippingprice"."shipping_method_id", "api_shippingprice"."home_delivery_price", "api_shippingprice"."stop_desk_price", "api_shippingprice"."express_price", "api_shippingprice"."pickup_price", "api_shippingprice"."free_shipping_minimum", "api_shippingprice"."weight_surcharge", "api_shippingprice"."volume_surcharge", "api_shippingprice"."cod_available", "api_shippingprice"."cod_fee", "api_shippingprice"."insurance_available", "api_shippingprice"."insurance_rate", "api_shippingprice"."tracking_available", "api_shippingprice"."max_weight", "api_shippingprice"."max_value", "api_shippingprice"."is_active", "api_shippingprice"."valid_from", "api_shippingprice"."valid_to", "api_shippingprice"."created_at", "api_shippingprice"."updated_at", "api_shipping_method"."id", "api_shipping_method"."organization_id", "api_shipping_method"."name", "api_shipping_method"."provider_name", "api_shipping_method"."base_cost", "api_shipping_method"."estimated_days", "api_shipping_method"."is_active", "api_shipping_method"."description", "api_shipping_method"."created_at", "api_shipping_method"."updated_at" FROM "api_shippingprice" INNER JOIN "api_shipping_method" ON ("api_shippingprice"."shipping_method_id" = "api_shipping_method"."id") WHERE ("api_shippingprice"."is_active" AND "api_shippingprice"."wilaya_id" = 1); args=(1,); alias=default
+INFO 2026-04-21 02:28:44,315 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 239
+INFO 2026-04-21 02:28:44,315 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 239
+DEBUG (0.002) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE "api_shipping"."is_active" ORDER BY "api_shipping"."wilaya_id" ASC; args=(); alias=default
+INFO 2026-04-21 02:29:55,153 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 82
+INFO 2026-04-21 02:29:55,153 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 82
+DEBUG (0.003) SELECT "api_payment_method"."id", "api_payment_method"."name_ar", "api_payment_method"."name_en", "api_payment_method"."payment_type", "api_payment_method"."gateway_provider", "api_payment_method"."account_name", "api_payment_method"."account_number", "api_payment_method"."iban", "api_payment_method"."instructions_ar", "api_payment_method"."instructions_en", "api_payment_method"."icon", "api_payment_method"."logo", "api_payment_method"."order_index", "api_payment_method"."is_active", "api_payment_method"."is_default", "api_payment_method"."max_amount", "api_payment_method"."fee_percentage", "api_payment_method"."fee_fixed", "api_payment_method"."created_by_id", "api_payment_method"."created_by_user_id", "api_payment_method"."created_at", "api_payment_method"."updated_at" FROM "api_payment_method" WHERE "api_payment_method"."is_active" ORDER BY "api_payment_method"."order_index" ASC, "api_payment_method"."name_ar" ASC; args=(); alias=default
+INFO 2026-04-21 02:30:03,967 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 388
+INFO 2026-04-21 02:30:03,967 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 388
+DEBUG (0.003) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '16') LIMIT 21; args=('16',); alias=default
+DEBUG (0.001) SELECT "api_shippingprice"."id", "api_shippingprice"."wilaya_id", "api_shippingprice"."shipping_method_id", "api_shippingprice"."home_delivery_price", "api_shippingprice"."stop_desk_price", "api_shippingprice"."express_price", "api_shippingprice"."pickup_price", "api_shippingprice"."free_shipping_minimum", "api_shippingprice"."weight_surcharge", "api_shippingprice"."volume_surcharge", "api_shippingprice"."cod_available", "api_shippingprice"."cod_fee", "api_shippingprice"."insurance_available", "api_shippingprice"."insurance_rate", "api_shippingprice"."tracking_available", "api_shippingprice"."max_weight", "api_shippingprice"."max_value", "api_shippingprice"."is_active", "api_shippingprice"."valid_from", "api_shippingprice"."valid_to", "api_shippingprice"."created_at", "api_shippingprice"."updated_at", "api_shipping_method"."id", "api_shipping_method"."organization_id", "api_shipping_method"."name", "api_shipping_method"."provider_name", "api_shipping_method"."base_cost", "api_shipping_method"."estimated_days", "api_shipping_method"."is_active", "api_shipping_method"."description", "api_shipping_method"."created_at", "api_shipping_method"."updated_at" FROM "api_shippingprice" INNER JOIN "api_shipping_method" ON ("api_shippingprice"."shipping_method_id" = "api_shipping_method"."id") WHERE ("api_shippingprice"."is_active" AND "api_shippingprice"."wilaya_id" = 1); args=(1,); alias=default
+INFO 2026-04-21 02:30:10,536 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 243
+INFO 2026-04-21 02:30:10,536 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 243
+DEBUG (0.005) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '16') LIMIT 21; args=('16',); alias=default
+DEBUG (0.001) SELECT "api_shippingprice"."id", "api_shippingprice"."wilaya_id", "api_shippingprice"."shipping_method_id", "api_shippingprice"."home_delivery_price", "api_shippingprice"."stop_desk_price", "api_shippingprice"."express_price", "api_shippingprice"."pickup_price", "api_shippingprice"."free_shipping_minimum", "api_shippingprice"."weight_surcharge", "api_shippingprice"."volume_surcharge", "api_shippingprice"."cod_available", "api_shippingprice"."cod_fee", "api_shippingprice"."insurance_available", "api_shippingprice"."insurance_rate", "api_shippingprice"."tracking_available", "api_shippingprice"."max_weight", "api_shippingprice"."max_value", "api_shippingprice"."is_active", "api_shippingprice"."valid_from", "api_shippingprice"."valid_to", "api_shippingprice"."created_at", "api_shippingprice"."updated_at", "api_shipping_method"."id", "api_shipping_method"."organization_id", "api_shipping_method"."name", "api_shipping_method"."provider_name", "api_shipping_method"."base_cost", "api_shipping_method"."estimated_days", "api_shipping_method"."is_active", "api_shipping_method"."description", "api_shipping_method"."created_at", "api_shipping_method"."updated_at" FROM "api_shippingprice" INNER JOIN "api_shipping_method" ON ("api_shippingprice"."shipping_method_id" = "api_shipping_method"."id") WHERE ("api_shippingprice"."is_active" AND "api_shippingprice"."wilaya_id" = 1); args=(1,); alias=default
+INFO 2026-04-21 02:30:17,359 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 241
+INFO 2026-04-21 02:30:17,359 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 241
+INFO 2026-04-21 02:30:23,769 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 3156
+INFO 2026-04-21 02:30:23,769 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 3156
+INFO 2026-04-21 02:30:33,946 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 2197
+INFO 2026-04-21 02:30:33,946 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 2197
+DEBUG (0.003) SELECT "api_shipping"."id", "api_shipping"."wilaya_id", "api_shipping"."name_ar", "api_shipping"."name_fr", "api_shipping"."stop_desk_price", "api_shipping"."home_delivery_price", "api_shipping"."is_active", "api_shipping"."regions", "api_shipping"."pickup_latitude", "api_shipping"."pickup_longitude", "api_shipping"."radius_km", "api_shipping"."maps_url", "api_shipping"."created_at", "api_shipping"."updated_at" FROM "api_shipping" WHERE ("api_shipping"."is_active" AND "api_shipping"."wilaya_id" = '99') LIMIT 21; args=('99',); alias=default
+INFO 2026-04-21 02:30:43,718 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 126
+INFO 2026-04-21 02:30:43,718 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 126
+INFO 2026-04-21 02:30:50,480 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 118
+INFO 2026-04-21 02:30:50,480 log 21550 135856774969024 "POST /api/graphql/ HTTP/1.1" 200 118
+INFO 2026-04-21 05:16:49,157 autoreload 28827 127557033394304 Watching for file changes with StatReloader
+INFO 2026-04-21 05:16:49,157 autoreload 28827 127557033394304 Watching for file changes with StatReloader
+DEBUG (0.056) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 07:06:48,887 autoreload 33310 134231949508736 Watching for file changes with StatReloader
+INFO 2026-04-21 07:06:48,887 autoreload 33310 134231949508736 Watching for file changes with StatReloader
+DEBUG (0.110) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 07:51:03,610 autoreload 36306 124829854929024 Watching for file changes with StatReloader
+INFO 2026-04-21 07:51:03,610 autoreload 36306 124829854929024 Watching for file changes with StatReloader
+DEBUG (0.022) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 08:02:31,721 autoreload 37601 136897935548544 Watching for file changes with StatReloader
+INFO 2026-04-21 08:02:31,721 autoreload 37601 136897935548544 Watching for file changes with StatReloader
+DEBUG (0.029) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 08:16:49,416 autoreload 38431 123657806819456 Watching for file changes with StatReloader
+INFO 2026-04-21 08:16:49,416 autoreload 38431 123657806819456 Watching for file changes with StatReloader
+DEBUG (0.021) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 08:43:40,684 autoreload 40542 126465389473920 Watching for file changes with StatReloader
+INFO 2026-04-21 08:43:40,684 autoreload 40542 126465389473920 Watching for file changes with StatReloader
+DEBUG (0.040) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 09:05:38,906 autoreload 42841 125303896981632 Watching for file changes with StatReloader
+INFO 2026-04-21 09:05:38,906 autoreload 42841 125303896981632 Watching for file changes with StatReloader
+DEBUG (0.008) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.001) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 09:29:45,303 autoreload 44108 137758031319168 Watching for file changes with StatReloader
+INFO 2026-04-21 09:29:45,303 autoreload 44108 137758031319168 Watching for file changes with StatReloader
+DEBUG (0.011) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 09:42:53,441 autoreload 45203 134159558512768 Watching for file changes with StatReloader
+INFO 2026-04-21 09:42:53,441 autoreload 45203 134159558512768 Watching for file changes with StatReloader
+DEBUG (0.011) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.003) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 09:47:44,581 autoreload 46541 126215115501696 Watching for file changes with StatReloader
+INFO 2026-04-21 09:47:44,581 autoreload 46541 126215115501696 Watching for file changes with StatReloader
+DEBUG (0.016) 
+            SELECT
+                c.relname,
+                CASE
+                    WHEN c.relispartition THEN 'p'
+                    WHEN c.relkind IN ('m', 'v') THEN 'v'
+                    ELSE 't'
+                END,
+                obj_description(c.oid, 'pg_class')
+            FROM pg_catalog.pg_class c
+            LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relkind IN ('f', 'm', 'p', 'r', 'v')
+                AND n.nspname NOT IN ('pg_catalog', 'pg_toast')
+                AND pg_catalog.pg_table_is_visible(c.oid)
+        ; args=None; alias=default
+DEBUG (0.002) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+INFO 2026-04-21 10:00:06,765 log 46541 126214926759616 "OPTIONS /api/api/health HTTP/1.1" 200 0
+INFO 2026-04-21 10:00:06,765 log 46541 126214926759616 "OPTIONS /api/api/health HTTP/1.1" 200 0
+WARNING 2026-04-21 10:00:07,715 log 46541 126214926759616 "GET /api/api/health HTTP/1.1" 404 3484
+WARNING 2026-04-21 10:00:07,715 log 46541 126214926759616 "GET /api/api/health HTTP/1.1" 404 3484
+INFO 2026-04-21 10:00:08,318 log 46541 126214926759616 "OPTIONS /api/pricing/dynamic/calculate HTTP/1.1" 200 0
+INFO 2026-04-21 10:00:08,318 log 46541 126214926759616 "OPTIONS /api/pricing/dynamic/calculate HTTP/1.1" 200 0
+INFO 2026-04-21 10:00:08,346 log 46541 126214918366912 "OPTIONS /api/pricing/dynamic/calculate HTTP/1.1" 200 0
+INFO 2026-04-21 10:00:08,346 log 46541 126214918366912 "OPTIONS /api/pricing/dynamic/calculate HTTP/1.1" 200 0
+WARNING 2026-04-21 10:00:08,462 log 46541 126214926759616 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:00:08,462 log 46541 126214926759616 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:00:08,558 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:00:08,558 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:01:05,940 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:01:05,940 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:02:06,151 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:02:06,151 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:03:05,938 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530
+WARNING 2026-04-21 10:03:05,938 log 46541 126214918366912 "POST /api/pricing/dynamic/calculate HTTP/1.1" 404 3530

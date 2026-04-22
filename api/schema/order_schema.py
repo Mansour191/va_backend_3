@@ -112,7 +112,9 @@ class OrderType(DjangoObjectType):
         ).prefetch_related(
             'items__product',
             'items__material',
-            'timeline__user'
+            'items__product__category',
+            'timeline__user',
+            'payments'
         ).only(
             'id', 'order_number', 'user_id', 'customer_name', 'phone', 'email',
             'shipping_address', 'wilaya_id', 'shipping_method_id', 'subtotal',
@@ -154,7 +156,14 @@ class OrderType(DjangoObjectType):
 
     def resolve_timeline(self, info):
         """Get order timeline sorted by timestamp (newest first)"""
-        return self.timeline.all().order_by('-timestamp')
+        # Use prefetched timeline if available to avoid additional database query
+        if hasattr(self, '_prefetched_objects_cache') and 'timeline' in self._prefetched_objects_cache:
+            timeline = self._prefetched_objects_cache['timeline']
+            # Sort the prefetched timeline in memory
+            return sorted(timeline, key=lambda x: x.timestamp, reverse=True)
+        else:
+            # Fallback to direct query if not prefetched
+            return self.timeline.select_related('user').all().order_by('-timestamp')
 
 
 class OrderItemType(DjangoObjectType):
@@ -720,7 +729,12 @@ class BulkCreateOrderItems(Mutation):
             # Update order subtotal
             if created_items:
                 new_subtotal = sum(item.price * item.quantity for item in created_items)
-                existing_subtotal = sum(item.price * item.quantity for item in order.items.all())
+                # Use prefetched items if available to avoid additional query
+                if hasattr(order, '_prefetched_objects_cache') and 'items' in order._prefetched_objects_cache:
+                    existing_items = order._prefetched_objects_cache['items']
+                else:
+                    existing_items = order.items.all()
+                existing_subtotal = sum(item.price * item.quantity for item in existing_items)
                 order.subtotal = existing_subtotal + new_subtotal
                 order.total_amount = order.subtotal + order.shipping_cost + order.tax - order.discount_amount
                 order.save()

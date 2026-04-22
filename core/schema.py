@@ -21,7 +21,7 @@ from api.schema.alert_schema import AlertQuery
 from api.schema.organization_schema import OrganizationQuery, OrganizationMutation
 from api.schema.payment_method_schema import PaymentMethodQuery
 from api.schema.analytics_schema import AnalyticsQuery
-from api.schema.shipping_schema import ShippingQuery
+from api.schema.shipping_schema import ShippingQuery, ShippingMutation
 from api.schema.order_schema import OrderQuery, OrderMutation
 from api.schema.coupon_schema import CouponQuery, CouponMutation
 
@@ -57,7 +57,7 @@ class Query(UserQuery, ProductQuery, CartQuery, WishlistQuery, ReviewQuery, Desi
     """Root query combining all domain queries"""
     pass
 
-class Mutation(UserMutation, ProductMutation, CartMutation, WishlistMutation, ReviewMutation, DesignMutation, NotificationMutation, SmartAlertMutation, OrganizationMutation, OrderMutation, CouponMutation, BlogMutation, PromotionMutation, ERPNextMutation, ConversationMutation, DashboardMutation):
+class Mutation(UserMutation, ProductMutation, CartMutation, WishlistMutation, ReviewMutation, DesignMutation, NotificationMutation, SmartAlertMutation, OrganizationMutation, ShippingMutation, OrderMutation, CouponMutation, BlogMutation, PromotionMutation, ERPNextMutation, ConversationMutation, DashboardMutation):
     """Root mutation combining all domain mutations"""
     pass
 
